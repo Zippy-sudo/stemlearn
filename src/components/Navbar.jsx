@@ -26,7 +26,7 @@ function Navbar() {
           <li><Link to="/feedback">Feedback</Link></li>
         </ul>
 
-        {/* Search Input */}
+      
         <input
           type="text"
           placeholder="Search..."
@@ -35,7 +35,7 @@ function Navbar() {
           className="search-input"
         />
 
-        {/* Auth Buttons */}
+        
         <div className="auth-buttons">
           <button className="login-btn">
             <Link to="/login">Login</Link>
