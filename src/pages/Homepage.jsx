@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import HeroSection from '../components/HeroSection';
 import Features from '../components/Features';
 import CourseCard from '../components/CourseCard';
+import Footer from '../components/Footer';
   
     
 function Homepage() {
@@ -14,6 +15,7 @@ function Homepage() {
                 <HeroSection/>
                 <Features />
                 <CourseCard />
+                <Footer />
             </div>
         </Router>
       )
