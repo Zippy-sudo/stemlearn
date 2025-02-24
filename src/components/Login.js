@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ name: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -17,8 +17,8 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5555/login", {
-        method: "GET",
+      const response = await fetch("http://127.0.0.1:5000/login", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
@@ -31,8 +31,13 @@ function Login() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
-    alert("Login successful!");
+      try {
+        localStorage.setItem("token", data.token);
+      } catch (storageError) {
+        console.error("Storage access error:", storageError);
+      }
+
+      alert("Login successful!");
     navigate("/SignUp");
   } catch (err) {
     setError("Failed to connect to server.");
@@ -48,14 +53,14 @@ function Login() {
         
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-gray-700">Name</label>
             <input
-              type="email"
-              name="email"
-              value={formData.email}
+              type="name"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               className="w-full p-2 mt-1 border rounded-lg focus:ring focus:ring-blue-300"
-              placeholder="Enter your email"
+              placeholder="Enter your name"
               required
             />
           </div>
