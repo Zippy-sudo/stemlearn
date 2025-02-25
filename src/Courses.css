@@ -1,55 +1,45 @@
-.popular-courses {
-    text-align: center;
-    padding: 50px 20px;
-  }
-  
-  .courses-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    justify-content: center;
-  }
-  
-  .course-card {
-    position: relative;
-    width: 100%;
-    height: 250px;
-    background-size: cover;
-    background-position: center;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-  
-  .overlay {
-    background: url('./images/Science.jpg');
+.course-card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  width: 300px;
+  margin: 10px;
+}
 
-    color: white;
-    padding: 20px;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .course-card:hover .overlay {
-    background: rgba(0, 0, 0, 0.8);
-  }
-  
-  .course-link {
-    display: inline-block;
-    margin-top: 10px;
-    color: blue;
-    font-weight: bold;
-    text-decoration: none;
-  }
-  
-  .course-link:hover {
-    text-decoration: underline;
-  }
-  
+.course-card:hover {
+  transform: translateY(-5px);
+}
+
+.image-container img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.course-info {
+  padding: 15px;
+  text-align: center;
+}
+
+.course-info h3 {
+  font-size: 20px;
+  color: #333;
+}
+
+.course-info p {
+  font-size: 14px;
+  color: #666;
+  margin: 10px 0;
+}
+
+.course-link {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.course-link:hover {
+  text-decoration: underline;
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CourseCard from './CourseCard'; 
-import '../Courses.css';
+import '../Courselist.css';
 
 function CourseList() {
   const [courses, setCourses] = useState([]);
