@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import CourseCard from './CourseCard'; 
 import '../Courselist.css';
 
-function CourseList() {
+function CourseList({loggedIn}) {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5555/courses') 
+    fetch('http://127.0.0.1:5555/unauthCourses') 
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch courses');
@@ -33,7 +33,7 @@ function CourseList() {
       <h2>Most Popular Courses</h2>
       <div className="courses-container">
         {courses.map((course) => (
-          <CourseCard key={course._id} course={course} />
+          <CourseCard key={course._id} course={course} loggedIn={loggedIn} />
         ))}
       </div>
     </div>

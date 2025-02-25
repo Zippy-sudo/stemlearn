@@ -2,31 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../Courses.css';
 
-function CourseCard({ courseId }) {
-  const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetch(`http://127.0.0.1:5555/courses/${courseId}`) 
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch course');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setCourse(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, [courseId]);
-
-  if (loading) return <p>Loading course...</p>;
-  if (error) return <p>Error: {error}</p>;
+function CourseCard({course, loggedIn}) {
+  // const [course, setCourse] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
 
   return (
     <div className="course-card">
@@ -44,9 +23,15 @@ function CourseCard({ courseId }) {
         </p>
 
         
-        <Link to={`/courses/${course._id}`} className="view-course">
+        { loggedIn ?
+          <Link to={`/courses/${course._id}`} className="view-course">
           View Course →
         </Link>
+        :
+        <Link to={"/login"} className="view-course">
+        View Course →
+        </Link>
+        }
       </div>
     </div>
   );

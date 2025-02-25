@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({setLoggedIn}) {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ function Login() {
     console.log("Form data:", formData);
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/login", {
+      const response = await fetch("http://127.0.0.1:5555/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -42,6 +42,7 @@ function Login() {
 
       alert("Login successful!");
     navigate("/");
+    setLoggedIn(true)
   } catch (err) {
     setError("Failed to connect to server.");
     setLoading(false);
