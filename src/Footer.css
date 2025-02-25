@@ -1,0 +1,32 @@
+.footer {
+    background: #1dc007;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .social-links {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+  }
+  
+  .social-icon {
+    color: white;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  
+  .social-icon:hover {
+    transform: scale(1.2);
+    color: #f442c7; /* Yellow hover effect */
+  }
+  

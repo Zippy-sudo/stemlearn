@@ -3,7 +3,8 @@ import { BrowserRouter as Router} from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import HeroSection from '../components/HeroSection';
 import Features from '../components/Features';
-import CourseCard from '../components/CourseCard';
+import CourseList from '../components/CourseList';
+import Footer from '../components/Footer';
   
     
 function Homepage() {
@@ -13,7 +14,8 @@ function Homepage() {
                 <Navbar />
                 <HeroSection/>
                 <Features />
-                <CourseCard />
+                <CourseList />
+                <Footer />
             </div>
         </Router>
       )
