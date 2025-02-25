@@ -16,6 +16,6 @@ function App() {
     </Router>
     <Homepage/>
     </>
-  )
+  )}
 
 export default App;
