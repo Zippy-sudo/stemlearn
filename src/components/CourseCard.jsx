@@ -28,11 +28,15 @@ function CourseCard({ courseId }) {
   if (loading) return <p>Loading course...</p>;
   if (error) return <p>Error: {error}</p>;
 
+  const defaultImage =  { Image: 'https://via.placeholder.com/200x200'};
+  const imageUrl =  defaultImage["Image"];
+
+
   return (
     <div className="course-card">
       <div
         className="course-image"
-        style={{ backgroundImage: `url(${course.imageUrl || 'default-image.jpg'})` }}
+         style={{ backgroundImage: `url(${imageUrl})` }}
       ></div>
 
       <div className="course-info">
