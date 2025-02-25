@@ -1,57 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../Courses.css';
 
-const courses = [
-  {
-    id: 1,
-    title: "Science",
-    description: "Explore the wonders of science.",
-    imageUrl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fkmco.co.ke%2Frole-of-science-and-technology-in-environmental-management-in-kenya%2F&psig=AOvVaw0nO1QnLqljBaYLCcpCAzpx&ust=1740481430585000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMjurOKU3IsDFQAAAAAdAAAAABAE",
-    link: "/courses/science"
-  },
-  {
-    id: 2,
-    title: "Technology",
-    description: "Learn about the latest in tech.",
-    link: "/courses/technology"
-  },
-  {
-    id: 3,
-    title: "Mathematics",
-    description: "Master the world of numbers.",
-    link: "/courses/mathematics"
-  },
-  {
-    id: 4,
-    title: "Engineering",
-    description: "Innovate and build the future.",
-    link: "/courses/engineering"
-  }
-];
+function CourseCard({ courseId }) {
+  const [course, setCourse] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-function PopularCourses() {
+  useEffect(() => {
+    fetch(`http://127.0.0.1:5555/courses/${courseId}`) 
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch course');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setCourse(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, [courseId]);
+
+  if (loading) return <p>Loading course...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
-    <div className="popular-courses">
-      <h2>Most Popular Courses</h2>
-      <div className="courses-container">
-        {courses.map((course) => (
-          <div 
-            key={course.id} 
-            className="course-card" 
-            style={{ backgroundImage: `url(${course.imageUrl})` }}
-          >
-            <div className="overlay">
-              <h3>{course.title}</h3>
-              <p>{course.description}</p>
-              <a href={course.link} className="course-link">
-                See Course Guide →
-              </a>
-            </div>
-          </div>
-        ))}
+    <div className="course-card">
+      <div
+        className="course-image"
+        style={{ backgroundImage: `url(${course.imageUrl || 'default-image.jpg'})` }}
+      ></div>
+
+      <div className="course-info">
+        <p className="course-subject">🏷 {course.subject}</p>
+        <p className="course-duration">⏳ {course.duration} Weeks</p>
+        <h3 className="course-title">{course.title}</h3>
+        <p className="course-description">
+          {course.description.length > 80 ? `${course.description.substring(0, 80)}...` : course.description}
+        </p>
+
+        
+        <Link to={`/courses/${course._id}`} className="view-course">
+          View Course →
+        </Link>
       </div>
     </div>
   );
 }
 
-export default PopularCourses;
+export default CourseCard;
