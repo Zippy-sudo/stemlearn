@@ -1,41 +1,62 @@
-import React, { useEffect, useState } from 'react';
-import CourseCard from './CourseCard'; 
-import '../Courselist.css';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-function CourseList({loggedIn}) {
+function CourseList() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5555/unauthCourses') 
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch courses');
+    const fetchCourses = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Get the token from localStorage
+        if (!token) {
+          throw new Error("No token found. Please log in.");
         }
-        return response.json();
-      })
-      .then((data) => {
-        setCourses(data.slice(0, 3)); 
+
+        const response = await fetch("http://127.0.0.1:5555/courses", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+          credentials: "include", // Include cookies if needed
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            response.status === 401
+              ? "Unauthorized"
+              : "Failed to fetch courses."
+          );
+        }
+
+        const data = await response.json();
+        setCourses(data);
         setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
+      } catch (err) {
+        console.error("Fetch error:", err);
+        setError(err.message || "An unexpected error occurred.");
         setLoading(false);
-      });
+      }
+    };
+
+    fetchCourses();
   }, []);
 
   if (loading) return <p>Loading courses...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div className="popular-courses">
-      <h2>Most Popular Courses</h2>
-      <div className="courses-container">
+    <div>
+      <h2>Courses</h2>
+      <ul>
         {courses.map((course) => (
-          <CourseCard key={course._id} course={course} loggedIn={loggedIn} />
+          <li key={course._id}>
+            <Link to={`/courses/${course._id}`}>{course.title}</Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
