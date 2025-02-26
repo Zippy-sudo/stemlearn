@@ -18,7 +18,7 @@ function Login({setLoggedIn}) {
     console.log("Form data:", formData);
 
     try {
-      const response = await fetch("http://127.0.0.1:5555/login", {
+      const response = await fetch("http://127.0.0.1:5000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -34,19 +34,29 @@ function Login({setLoggedIn}) {
         return;
       }
 
+      console.log("Response Data:", data);
+
       try {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role);
+        console.log("Role Saved in LocalStorage:", localStorage.getItem("role"));
       } catch (storageError) {
         console.error("Storage access error:", storageError);
       }
 
       alert("Login successful!");
-    navigate("/");
-    setLoggedIn(true)
-  } catch (err) {
-    setError("Failed to connect to server.");
-    setLoading(false);
-  }
+      setLoggedIn(true);
+
+      if (data.role === "ADMIN") {
+        navigate("/AdmDashboard");
+      } else {
+        navigate("/");
+      }
+      
+    } catch (err) {
+      setError("Failed to connect to server.");
+      setLoading(false);
+    }
   }
 
   return (
@@ -64,7 +74,7 @@ function Login({setLoggedIn}) {
               value={formData.email}
               onChange={handleChange}
               className="w-full p-2 mt-1 border rounded-lg focus:ring focus:ring-blue-300"
-              placeholder="Enter your name"
+              placeholder="Enter your email"
               required
             />
           </div>
