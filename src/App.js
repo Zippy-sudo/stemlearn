@@ -19,7 +19,8 @@ function App() {
         <Route path="/login" element={<Login setLoggedIn={setLoggedIn}/>} />
       </Routes>
     </Router>
-  )
-}
+ 
+    
+  )}
 
 export default App;
