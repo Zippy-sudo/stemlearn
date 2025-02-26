@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback, useNavigate } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 function AdmDashboard() {
-  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [newCourse, setNewCourse] = useState({
     title: "",
@@ -19,32 +18,38 @@ function AdmDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Helper function to handle API requests with token authentication
-  // Retrieve the JWT token from local storage
-   // Redirect to login page if token is missing or invalid
+  // API request function with token authentication
   async function apiRequest(url, method, body = null) {
     const token = localStorage.getItem("token");
-    
+    if (!token) {
+      alert("Unauthorized! Please log in.");
+      window.location.href = "/login";
+      return;
+    }
+
     const options = {
       method,
       headers: {
         "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
+        Authorization: `Bearer ${token}`,
       },
       ...(body && { body: JSON.stringify(body) }),
     };
 
     try {
       const response = await fetch(url, options);
-      if (response.status === 401) {
-        console.warn("Unauthorized request. Redirecting to login.");
-        localStorage.removeItem("token");
-        navigate("/login");
-        return null;
+      if (!response.ok) {
+        if (response.status === 401) {
+          alert("Session expired. Please log in again.");
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+        }
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
-      return response.ok ? response.json() : null;
+      return await response.json();
     } catch (error) {
       console.error("API request error:", error);
+      setError("Failed to connect to the server.");
       return null;
     }
   }
@@ -52,7 +57,7 @@ function AdmDashboard() {
   const fetchCourses = useCallback(async () => {
     setLoading(true);
     setError(null);
-    const data = await apiRequest("http://127.0.0.1:5000/courses", "GET");
+    const data = await apiRequest("http://localhost:5000/courses", "GET");
     if (data) setCourses(data);
     setLoading(false);
   }, []);
@@ -63,18 +68,24 @@ function AdmDashboard() {
 
   async function handleAddCourse(e) {
     e.preventDefault();
-    if (!newCourse.title.trim() || !newCourse.description.trim()) return;
-    const addedCourse = await apiRequest("http://127.0.0.1:5000/courses", "POST", newCourse);
+    if (!newCourse.title.trim() || !newCourse.description.trim()) {
+      alert("Title and Description are required.");
+      return;
+    }
+    const addedCourse = await apiRequest("http://localhost:5000/courses", "POST", newCourse);
     if (addedCourse) {
       setNewCourse({ title: "", description: "", subject: "", duration: "" });
       fetchCourses();
     }
-  } 
+  }
 
   async function handleEditCourse(e) {
     e.preventDefault();
-    if (!editCourse.title.trim() || !editCourse.description.trim()) return;
-    const updatedCourse = await apiRequest(`http://127.0.0.1:5000/courses/${editCourse.id}`, "PATCH", editCourse);
+    if (!editCourse.title.trim() || !editCourse.description.trim()) {
+      alert("Title and Description cannot be empty.");
+      return;
+    }
+    const updatedCourse = await apiRequest(`http://localhost:5000/courses/${editCourse.id}`, "PATCH", editCourse);
     if (updatedCourse) {
       setEditCourse({ id: null, title: "", description: "", subject: "", duration: "" });
       fetchCourses();
@@ -82,7 +93,8 @@ function AdmDashboard() {
   }
 
   async function handleDeleteCourse(id) {
-    const deleted = await apiRequest(`http://127.0.0.1:5000/courses/${id}`, "DELETE");
+    if (!window.confirm("Are you sure you want to delete this course?")) return;
+    const deleted = await apiRequest(`http://localhost:5000/courses/${id}`, "DELETE");
     if (deleted) fetchCourses();
   }
 
@@ -175,7 +187,7 @@ function AdmDashboard() {
       ) : (
         <ul className="mt-4">
           {courses.map((course) => (
-            <li key={course._id} className="flex justify-between items-center bg-white p-4 rounded shadow mb-2">
+            <li key={course.id ?? course.title} className="flex justify-between items-center bg-white p-4 rounded shadow mb-2">
               <div>
                 <p className="text-lg font-semibold">{course.title}</p>
                 <p className="text-sm text-gray-600">{course.description}</p>
@@ -183,16 +195,10 @@ function AdmDashboard() {
                 <p className="text-sm text-gray-500">Duration: {course.duration} hours</p>
               </div>
               <div className="space-x-2">
-                <button
-                  className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded"
-                  onClick={() => setEditCourse(course)}
-                >
+                <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" onClick={() => setEditCourse(course)}>
                   Edit
                 </button>
-                <button
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                  onClick={() => handleDeleteCourse(course._id)}
-                >
+                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" onClick={() => handleDeleteCourse(course.id)}>
                   Delete
                 </button>
               </div>
