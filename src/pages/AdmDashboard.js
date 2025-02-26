@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useNavigate } from "react";
 
 function AdmDashboard() {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [newCourse, setNewCourse] = useState({
     title: "",
@@ -18,74 +19,71 @@ function AdmDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  // Helper function to handle API requests with token authentication
+  // Retrieve the JWT token from local storage
+   // Redirect to login page if token is missing or invalid
+  async function apiRequest(url, method, body = null) {
+    const token = localStorage.getItem("token");
+    
+    const options = {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      ...(body && { body: JSON.stringify(body) }),
+    };
 
-  async function fetchCourses() {
-    setLoading(true);
-    setError(null);
     try {
-      const response = await fetch("http://localhost:5000/courses");
-      if (!response.ok) throw new Error("Failed to fetch courses");
-      const data = await response.json();
-      setCourses(data);
+      const response = await fetch(url, options);
+      if (response.status === 401) {
+        console.warn("Unauthorized request. Redirecting to login.");
+        localStorage.removeItem("token");
+        navigate("/login");
+        return null;
+      }
+      return response.ok ? response.json() : null;
     } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
+      console.error("API request error:", error);
+      return null;
     }
   }
+
+  const fetchCourses = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    const data = await apiRequest("http://127.0.0.1:5000/courses", "GET");
+    if (data) setCourses(data);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
 
   async function handleAddCourse(e) {
     e.preventDefault();
     if (!newCourse.title.trim() || !newCourse.description.trim()) return;
-    try {
-      const response = await fetch("http://localhost:5000/courses", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newCourse),
-      });
-      if (!response.ok) throw new Error("Failed to add course");
+    const addedCourse = await apiRequest("http://127.0.0.1:5000/courses", "POST", newCourse);
+    if (addedCourse) {
       setNewCourse({ title: "", description: "", subject: "", duration: "" });
       fetchCourses();
-    } catch (error) {
-      setError(error.message);
     }
-  }
+  } 
 
   async function handleEditCourse(e) {
     e.preventDefault();
     if (!editCourse.title.trim() || !editCourse.description.trim()) return;
-    try {
-      const response = await fetch(`http://localhost:5000/courses/${editCourse.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: editCourse.title,
-          description: editCourse.description,
-          subject: editCourse.subject,
-          duration: editCourse.duration,
-        }),
-      });
-      if (!response.ok) throw new Error("Failed to edit course");
+    const updatedCourse = await apiRequest(`http://127.0.0.1:5000/courses/${editCourse.id}`, "PATCH", editCourse);
+    if (updatedCourse) {
       setEditCourse({ id: null, title: "", description: "", subject: "", duration: "" });
       fetchCourses();
-    } catch (error) {
-      setError(error.message);
     }
   }
 
   async function handleDeleteCourse(id) {
-    try {
-      const response = await fetch(`http://localhost:5000/courses/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) throw new Error("Failed to delete course");
-      fetchCourses();
-    } catch (error) {
-      setError(error.message);
-    }
+    const deleted = await apiRequest(`http://127.0.0.1:5000/courses/${id}`, "DELETE");
+    if (deleted) fetchCourses();
   }
 
   return (
