@@ -1,6 +1,6 @@
 import React from 'react'
 
-function AdminDashboard() {
+function AdminDashboard({baseURL}) {
   return (
     <div>AdminDashboard</div>
   )

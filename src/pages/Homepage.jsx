@@ -5,12 +5,12 @@ import Features from '../components/Features';
 import CourseList from '../components/CourseList';
 import Footer from '../components/Footer';
 
-function Homepage({loggedIn}) {
+function Homepage({loggedIn, baseURL}) {
     return (
         <div className='routes'>
             <HeroSection />
             <Features />
-            <CourseList loggedIn={loggedIn} />
+            <CourseList loggedIn={loggedIn} baseURL={baseURL}/>
             <Footer />
         </div>
     );

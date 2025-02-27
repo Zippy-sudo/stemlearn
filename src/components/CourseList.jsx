@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import CourseCard from './CourseCard'; 
 import '../Courselist.css';
 
-function CourseList({loggedIn}) {
+function CourseList({loggedIn, baseURL}) {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5555/unauthCourses') 
+    fetch(`${baseURL}/unauthCourses`) 
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch courses');
