@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function SignUp() {
+function SignUp({baseURL}) {
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -12,7 +12,7 @@ function SignUp() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-    const response = await fetch("http://127.0.0.1:5000/users", {
+    const response = await fetch(`${baseURL}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
