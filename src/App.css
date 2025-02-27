@@ -112,4 +112,27 @@
 .signup-btn:hover {
   background-color: darkgoldenrod;
 }
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #444;
+  display: block;
+  min-width: 200px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.dropdown-menu li {
+  padding: 8px 12px;
+}
+
+.dropdown-menu li:hover {
+  background-color: #555;
+}
+
+.dropdown-menu a {
+  color: white;
+  text-decoration: none;
+}
 

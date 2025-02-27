@@ -6,6 +6,7 @@ import Homepage from './pages/Homepage';
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import Navbar from './components/Navbar';
+
 import AdmDashboard from './pages/AdmDashboard';
 import AdminRoute from './components/protectedRoute';
 
@@ -21,9 +22,11 @@ function App() {
         <Route path="/login" element={<Login setLoggedIn={setLoggedIn}/>} />
         <Route path="/AdmDashboard" element={<AdmDashboard />} />
         <Route path="/admin/dashboard" element={<AdminRoute><AdmDashboard /></AdminRoute>} />
+
       </Routes>
     </Router>
-  )
-}
+ 
+    
+  )}
 
 export default App;
