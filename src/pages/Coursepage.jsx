@@ -43,6 +43,10 @@ const CoursesPage = () => {
             <Link to={`/courses/${course.id}/lessons`} className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
              Start Lessons
              </Link>
+             
+             <Link to={`/courses/${course.id}/Enroll`} className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+             Enroll Now
+             </Link>
           </div>
         ))}
       </div>
