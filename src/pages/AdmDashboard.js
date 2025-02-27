@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-function AdmDashboard() {
+function AdmDashboard({baseURL}) {
   const [courses, setCourses] = useState([]);
   const [newCourse, setNewCourse] = useState({
     title: "",
@@ -20,7 +20,7 @@ function AdmDashboard() {
 
   // API request function with token authentication
   async function apiRequest(url, method, body = null) {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("Token");
     if (!token) {
       alert("Unauthorized! Please log in.");
       window.location.href = "/login";
@@ -41,7 +41,7 @@ function AdmDashboard() {
       if (!response.ok) {
         if (response.status === 401) {
           alert("Session expired. Please log in again.");
-          localStorage.removeItem("token");
+          localStorage.removeItem("Token");
           window.location.href = "/login";
         }
         throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -57,7 +57,7 @@ function AdmDashboard() {
   const fetchCourses = useCallback(async () => {
     setLoading(true);
     setError(null);
-    const data = await apiRequest("http://localhost:5000/courses", "GET");
+    const data = await apiRequest(`${baseURL}/courses`, "GET");
     if (data) setCourses(data);
     setLoading(false);
   }, []);
@@ -72,7 +72,7 @@ function AdmDashboard() {
       alert("Title and Description are required.");
       return;
     }
-    const addedCourse = await apiRequest("http://localhost:5000/courses", "POST", newCourse);
+    const addedCourse = await apiRequest(`${baseURL}/courses`, "POST", newCourse);
     if (addedCourse) {
       setNewCourse({ title: "", description: "", subject: "", duration: "" });
       fetchCourses();
@@ -85,7 +85,7 @@ function AdmDashboard() {
       alert("Title and Description cannot be empty.");
       return;
     }
-    const updatedCourse = await apiRequest(`http://localhost:5000/courses/${editCourse.id}`, "PATCH", editCourse);
+    const updatedCourse = await apiRequest(`${baseURL}courses/${editCourse.id}`, "PATCH", editCourse);
     if (updatedCourse) {
       setEditCourse({ id: null, title: "", description: "", subject: "", duration: "" });
       fetchCourses();
@@ -94,7 +94,7 @@ function AdmDashboard() {
 
   async function handleDeleteCourse(id) {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
-    const deleted = await apiRequest(`http://localhost:5000/courses/${id}`, "DELETE");
+    const deleted = await apiRequest(`${baseURL}/courses/${id}`, "DELETE");
     if (deleted) fetchCourses();
   }
 

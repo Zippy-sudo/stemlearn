@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login({setLoggedIn}) {
+function Login({setLoggedIn, baseURL}) {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ function Login({setLoggedIn}) {
     console.log("Form data:", formData);
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/login", {
+      const response = await fetch(`${baseURL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -37,9 +37,9 @@ function Login({setLoggedIn}) {
       console.log("Response Data:", data);
 
       try {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("role", data.role);
-        console.log("Role Saved in LocalStorage:", localStorage.getItem("role"));
+        localStorage.setItem("Token", data["Token"]);
+        localStorage.setItem("Role", data["Role"]);
+        console.log("Role Saved in LocalStorage:", localStorage.getItem("Role"));
       } catch (storageError) {
         console.error("Storage access error:", storageError);
       }
