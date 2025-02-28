@@ -38,7 +38,7 @@ function Login({setLoggedIn, baseURL}) {
 
       try {
         localStorage.setItem("Token", data["Token"]);
-        localStorage.setItem("Role", data["Role"]);
+        localStorage.setItem("Role", data["role"]);
         console.log("Role Saved in LocalStorage:", localStorage.getItem("Role"));
       } catch (storageError) {
         console.error("Storage access error:", storageError);
