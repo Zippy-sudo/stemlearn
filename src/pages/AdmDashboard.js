@@ -24,7 +24,7 @@ function AdmDashboard({baseURL}) {
   }, [editCourse]);
 
   async function apiRequest(url, method, body = null) {
-    const token = localStorage.getItem("Token");
+    const token = sessionStorage.getItem("Token");
     if (!token) {
       alert("Unauthorized! Please log in.");
       window.location.href = "/login";
@@ -45,7 +45,7 @@ function AdmDashboard({baseURL}) {
       if (!response.ok) {
         if (response.status === 401) {
           alert("Session expired. Please log in again.");
-          localStorage.removeItem("Token");
+          sessionStorage.removeItem("Token");
           window.location.href = "/login";
         }
         throw new Error(`Error ${response.status}: ${response.statusText}`);

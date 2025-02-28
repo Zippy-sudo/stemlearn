@@ -37,9 +37,9 @@ function Login({setLoggedIn, baseURL}) {
       console.log("Response Data:", data);
 
       try {
-        localStorage.setItem("Token", data["Token"]);
-        localStorage.setItem("Role", data["Role"]);
-        console.log("Role Saved in LocalStorage:", localStorage.getItem("Role"));
+        sessionStorage.setItem("Token", data["Token"]);
+        sessionStorage.setItem("Role", data["Role"]);
+        console.log("Role Saved in sessionStorage:", sessionStorage.getItem("Role"));
       } catch (storageError) {
         console.error("Storage access error:", storageError);
       }
@@ -47,7 +47,7 @@ function Login({setLoggedIn, baseURL}) {
       alert("Login successful!");
       setLoggedIn(true);
 
-      if (data.role === "ADMIN") {
+      if (data.Role === "ADMIN") {
         navigate("/AdmDashboard");
       } else {
         navigate("/");

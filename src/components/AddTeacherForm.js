@@ -17,7 +17,7 @@ function AddTeacherForm({ baseURL }) {
       return;
     }
 
-    const token = localStorage.getItem("Token");
+    const token = sessionStorage.getItem("Token");
     if (!token) {
       alert("Unauthorized! Please log in.");
       window.location.href = "/login";
