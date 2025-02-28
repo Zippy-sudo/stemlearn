@@ -9,10 +9,18 @@ const CoursesPage = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5555/unauthCourses");
+        const response = await fetch("http://127.0.0.1:5555/courses", {
+          method: "GET", // Explicitly setting the method
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("Token")}`, // If authentication is needed
+          },
+        });
+  
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
+  
         const data = await response.json();
         setCourses(data);
       } catch (err) {
@@ -21,9 +29,12 @@ const CoursesPage = () => {
         setLoading(false);
       }
     };
-
+  
     fetchCourses();
   }, []);
+  
+
+
 
   if (loading) return <p className="text-center text-gray-500">Loading courses...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
