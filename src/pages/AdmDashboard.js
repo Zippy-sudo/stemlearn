@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import AddTeacherForm from "../components/AddTeacherForm";
 
 function AdmDashboard({baseURL}) {
   const [courses, setCourses] = useState([]);
@@ -9,7 +10,7 @@ function AdmDashboard({baseURL}) {
     duration: "",
   });
   const [editCourse, setEditCourse] = useState({
-    id: null,
+    _id: "",
     title: "",
     description: "",
     subject: "",
@@ -18,7 +19,10 @@ function AdmDashboard({baseURL}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // API request function with token authentication
+  useEffect(() => {
+    console.log("edit course updated:", editCourse);
+  }, [editCourse]);
+
   async function apiRequest(url, method, body = null) {
     const token = localStorage.getItem("Token");
     if (!token) {
@@ -58,9 +62,11 @@ function AdmDashboard({baseURL}) {
     setLoading(true);
     setError(null);
     const data = await apiRequest(`${baseURL}/courses`, "GET");
-    if (data) setCourses(data);
+    if (data) {
+      console.log(data);
+      setCourses(data);}
     setLoading(false);
-  }, []);
+  }, [baseURL]);
 
   useEffect(() => {
     fetchCourses();
@@ -85,9 +91,9 @@ function AdmDashboard({baseURL}) {
       alert("Title and Description cannot be empty.");
       return;
     }
-    const updatedCourse = await apiRequest(`${baseURL}courses/${editCourse.id}`, "PATCH", editCourse);
+    const updatedCourse = await apiRequest(`${baseURL}/courses/${editCourse._id}`, "PATCH", editCourse);
     if (updatedCourse) {
-      setEditCourse({ id: null, title: "", description: "", subject: "", duration: "" });
+      setEditCourse({ _id: null, title: "", description: "", subject: "", duration: "" });
       fetchCourses();
     }
   }
@@ -139,8 +145,14 @@ function AdmDashboard({baseURL}) {
         </button>
       </form>
 
+      {/* Add Teacher Form */}
+      <div className="mt-6 bg-white p-4 rounded shadow">
+        <h3 className="text-lg font-semibold">Add New Teacher</h3>
+        <AddTeacherForm baseURL={baseURL} />
+      </div>
+
       {/* Edit Course Form */}
-      {editCourse.id && (
+      {editCourse._id !== null && (
         <form onSubmit={handleEditCourse} className="bg-yellow-50 p-4 rounded shadow mt-4 space-y-2">
           <h3 className="text-lg font-semibold">Edit Course</h3>
           <input
@@ -148,23 +160,31 @@ function AdmDashboard({baseURL}) {
             value={editCourse.title}
             onChange={(e) => setEditCourse({ ...editCourse, title: e.target.value })}
             className="w-full border p-2 rounded"
+            id="edit-title"
+            name="edit-title"
           />
           <textarea
             value={editCourse.description}
             onChange={(e) => setEditCourse({ ...editCourse, description: e.target.value })}
             className="w-full border p-2 rounded"
+            id="edit-description"
+            name="edit-description"
           />
           <input
             type="text"
             value={editCourse.subject}
             onChange={(e) => setEditCourse({ ...editCourse, subject: e.target.value })}
             className="w-full border p-2 rounded"
+            id="edit-subject"
+            name="edit-subject"
           />
           <input
             type="number"
             value={editCourse.duration}
             onChange={(e) => setEditCourse({ ...editCourse, duration: e.target.value })}
             className="w-full border p-2 rounded"
+            id="edit-duration"
+            name="edit-duration"
           />
           <div className="flex space-x-2">
             <button type="submit" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
@@ -172,7 +192,7 @@ function AdmDashboard({baseURL}) {
             </button>
             <button
               type="button"
-              onClick={() => setEditCourse({ id: null, title: "", description: "", subject: "", duration: "" })}
+              onClick={() => setEditCourse({ _id: null, title: "", description: "", subject: "", duration: "" })}
               className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
             >
               Cancel
@@ -187,7 +207,7 @@ function AdmDashboard({baseURL}) {
       ) : (
         <ul className="mt-4">
           {courses.map((course) => (
-            <li key={course.id ?? course.title} className="flex justify-between items-center bg-white p-4 rounded shadow mb-2">
+            <li key={course._id ?? course.title} className="flex justify-between items-center bg-white p-4 rounded shadow mb-2">
               <div>
                 <p className="text-lg font-semibold">{course.title}</p>
                 <p className="text-sm text-gray-600">{course.description}</p>
@@ -195,10 +215,10 @@ function AdmDashboard({baseURL}) {
                 <p className="text-sm text-gray-500">Duration: {course.duration} hours</p>
               </div>
               <div className="space-x-2">
-                <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" onClick={() => setEditCourse(course)}>
+                <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" onClick={() => {setEditCourse({_id: course._id ?? course.title, ...course})}}>
                   Edit
                 </button>
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" onClick={() => handleDeleteCourse(course.id)}>
+                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" onClick={() => handleDeleteCourse(course._id)}>
                   Delete
                 </button>
               </div>
