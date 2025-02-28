@@ -24,7 +24,7 @@ function CourseCard({course, loggedIn}) {
 
         
         { loggedIn ?
-          <Link to={`/courses/${course._id}`} className="view-course">
+          <Link to={`/courses`} className="view-course">
           View Course →
         </Link>
         :
