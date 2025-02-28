@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../Courses.css';
+import '../CoursesCard.css';
 
 function CourseCard({course, loggedIn}) {
   // const [course, setCourse] = useState(null);
