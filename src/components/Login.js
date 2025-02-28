@@ -48,7 +48,7 @@ function Login({setLoggedIn, baseURL}) {
       setLoggedIn(true);
 
       if (data.role === "ADMIN") {
-        navigate("/courses");
+        navigate("/AdmDashboard");
       } else {
         navigate("/");
       }

@@ -8,22 +8,33 @@ function CourseList({loggedIn, baseURL}) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${baseURL}/unauthCourses`) 
-      .then((response) => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch(`${baseURL}/courses`, {
+          method: "GET", 
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("Token")}`, 
+          },
+        });
+  
         if (!response.ok) {
-          throw new Error('Failed to fetch courses');
+          throw new Error(`Failed to fetch courses. Status: ${response.status}`);
         }
-        return response.json();
-      })
-      .then((data) => {
-        setCourses(data.slice(0, 3)); 
-        setLoading(false);
-      })
-      .catch((err) => {
+  
+        const data = await response.json();
+        setCourses(data.slice(0, 3)); // Limiting to 3 courses
+      } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+  
+    fetchCourses();
   }, []);
+  
 
   if (loading) return <p>Loading courses...</p>;
   if (error) return <p>Error: {error}</p>;
