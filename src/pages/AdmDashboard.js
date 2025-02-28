@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import AddTeacherForm from "../components/AddTeacherForm";
+import AddStudentForm from "../components/AddStudentForm";
 
 function AdmDashboard({baseURL}) {
   const [courses, setCourses] = useState([]);
@@ -149,6 +150,12 @@ function AdmDashboard({baseURL}) {
       <div className="mt-6 bg-white p-4 rounded shadow">
         <h3 className="text-lg font-semibold">Add New Teacher</h3>
         <AddTeacherForm baseURL={baseURL} />
+      </div>
+
+      {/* Add Student Form */}
+      <div className="mt-6 bg-white p-4 rounded shadow">
+        <h3 className="text-lg font-semibold">Add New Student</h3>
+        <AddStudentForm baseURL={baseURL} />
       </div>
 
       {/* Edit Course Form */}
