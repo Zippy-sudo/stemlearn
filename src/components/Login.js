@@ -40,6 +40,7 @@ function Login({setLoggedIn, baseURL}) {
         sessionStorage.setItem("Token", data["Token"]);
         sessionStorage.setItem("Role", data["Role"]);
         console.log("Role Saved in sessionStorage:", sessionStorage.getItem("Role"));
+        
       } catch (storageError) {
         console.error("Storage access error:", storageError);
       }

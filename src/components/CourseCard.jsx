@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../Courses.css';
+import '../CoursesCard.css';
 
 function CourseCard({course, loggedIn}) {
   // const [course, setCourse] = useState(null);
@@ -24,7 +24,7 @@ function CourseCard({course, loggedIn}) {
 
         
         { loggedIn ?
-          <Link to={`/courses/${course._id}`} className="view-course">
+          <Link to={`/courses`} className="view-course">
           View Course →
         </Link>
         :
