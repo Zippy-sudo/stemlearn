@@ -50,7 +50,12 @@ function Login({setLoggedIn, baseURL}) {
 
       if (data.Role === "ADMIN") {
         navigate("/AdmDashboard");
-      } else {
+      }
+      else if (data.Role === "TEACHER") {
+        navigate("/TeacherDashboard");
+      }
+
+      else {
         navigate("/");
       }
       
