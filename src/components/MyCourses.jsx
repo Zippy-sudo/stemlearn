@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
+import React, { useState, useEffect } from 'react';
 
-function StudentDashboard() {
+function MyCourses(){
+
     const [courses, setCourses] = useState([]);
     const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
 
@@ -30,12 +30,7 @@ function StudentDashboard() {
 
     return (
         <div>
-            <h1>Student Dashboard</h1>
-            <Sidebar />
-            <button onClick={() => document.getElementById('my-courses-section').scrollIntoView({ behavior: 'smooth' })}>
-                My Courses
-            </button>
-
+        
             <div id="my-courses-section">
                 <h2>My Courses</h2>
                 {courses.length > 0 ? (
@@ -56,7 +51,11 @@ function StudentDashboard() {
                 )}
             </div>
         </div>
-    );
+  
+  )
+
 }
 
-export default StudentDashboard;
+
+
+export default MyCourses
