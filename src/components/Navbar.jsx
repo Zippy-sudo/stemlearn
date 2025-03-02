@@ -22,7 +22,7 @@ function Navbar() {
           <li><Link to="/admin/dashboard">Dashboard</Link></li>
           <li><Link to="/courses">Courses</Link></li>
           <li><Link to="/lessons">Lessons</Link></li>
-          <li><Link to="/feedback">Feedback</Link></li>
+          <li><Link to="/studentDashboard">Feedback</Link></li>
         </ul>
 
       

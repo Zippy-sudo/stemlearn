@@ -11,6 +11,8 @@ import AdmDashboard from './pages/AdmDashboard';
 import AdminRoute from './components/protectedRoute';
 import CoursesPage from './pages/Coursepage';
 import StudentDashboard from './pages/StudentDashboard';
+import MyCourses from './components/MyCourses';
+import Enrollment from './components/Enrollment';
 
 function App() {
   const baseURL = "http://127.0.0.1:5555"
@@ -27,6 +29,8 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminRoute><AdmDashboard baseURL={baseURL}/></AdminRoute>} />
         <Route path="/courses" element={<CoursesPage/>}/>
         <Route path="/studentDashboard" element={<StudentDashboard/>}/>
+        <Route path="/mycourses" element ={<MyCourses/>}/>
+        <Route path="/enroll/:courseId" element={<Enrollment/>}/>
 
       </Routes>
     </Router>

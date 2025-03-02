@@ -33,7 +33,7 @@ function CourseList({loggedIn, baseURL}) {
     };
   
     fetchCourses();
-  }, []);
+  }, [baseURL]);
   
 
   if (loading) return <p>Loading courses...</p>;
