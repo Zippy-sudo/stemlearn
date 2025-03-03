@@ -1,31 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import studentdesk from "../images/student_desk.png"
 
 function SignUp({baseURL}) {
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-    const response = await fetch(`${baseURL}/users`, {
+    const response = await fetch(`${baseURL}/signup`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify({name: name, email: email, password: password}),
     });
     if (!response.ok) {
       const error = await response.json();
       console.error("Error signing up:", error.message || "Unknown error");
       return;
     }
-    navigate("/login");} catch (error) {
-      console.error("Error signing up");
+    sessionStorage.setItem("Token", response["Token"]);
+    sessionStorage.setItem("Role", response["Role"]);
+    navigate("/StudentDashboard");} catch (error) {
+    console.error("Error signing up");
     }
   }
 
@@ -34,7 +36,7 @@ function SignUp({baseURL}) {
       <div className="flex w-[900px] shadow-lg rounded-2xl overflow-hidden">
         {/* Left Side */}
         <div className="w-1/2 bg-cover bg-center flex items-center justify-center p-6" 
-             style={{ backgroundImage: "url(https://i.pinimg.com/736x/9a/7c/df/9a7cdfee9c8842c74934ec429daa2820.jpg)" }}>
+             style={{ backgroundImage: `url(${studentdesk})` }}>
           <h2 className="text-purple text-3xl font-bold relative top-[-40px] left-[-10px]">STEM IT UP!</h2>
         </div>
 
@@ -46,7 +48,7 @@ function SignUp({baseURL}) {
               <input
                 type="text"
                 placeholder="name"
-                onChange={(e) => setUser({ ...user, name: e.target.value })}
+                onChange={(e) => setName(e.target.value)}
                 className="w-1/2 p-3 border rounded-md"
                 required
               />
@@ -54,22 +56,22 @@ function SignUp({baseURL}) {
             <input
               type="email"
               placeholder="Enter your email"
-              onChange={(e) => setUser({ ...user, email: e.target.value })}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full p-3 border rounded-md"
               required
             />
             <input
               type="password"
               placeholder="Create password"
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full p-3 border rounded-md"
               required
             />
-            <button type="submit" className="w-full bg-purple-800 text-white py-3 rounded-md font-bold">
+            <button type="submit" className="w-full bg-purple-800 text-white py-3 rounded-md font-bold" onSubmit={(e) => handleSubmit(e)}>
               Create Account
             </button>
             <p className="text-center text-gray-600 mt-2">
-              Already have an account? <a href="/login" className="text-purple-600">Log in</a>
+              Already have an account? <a href="/login" className="text-purple-600" onClick={()=> navigate("/Login")}>Log in</a>
             </p>
           </form>
         </div>

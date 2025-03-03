@@ -1,8 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import '../Features.css'; 
 
 function Features() {
+  const navigate = useNavigate()
+  function HandleClick() {
+    navigate("/signup")
+  }
+
   return (
     <div className="features">
       <div className="info">
@@ -14,7 +19,7 @@ function Features() {
           We believe that every child has the potential to excel in these fields with the right guidance and resources.
           Start learning today and shape the future with STEM! 🚀🔍 #LearnWithSTEMLearn
         </p>
-        <button className="btn-primary">Get Started</button>
+        <button className="btn-primary" onClick={HandleClick}>Get Started</button>
       </div>
 
       <div className="feature-cards">
@@ -22,7 +27,7 @@ function Features() {
           <span className="icon">🔍</span>
           <h3>Find a Course</h3>
           <p>Search by subject, course, or region to find the right course for you.</p>
-          <Link to="/signup" className="btn-link">Get Started →</Link>
+          <Link to="/Courses" className="btn-link">Get Started →</Link>
         </div>
 
         <div className="feature-card">

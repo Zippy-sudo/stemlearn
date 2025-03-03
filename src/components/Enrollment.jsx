@@ -1,29 +1,16 @@
-import React, { useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-//import { jwtDecode } from 'jwt-decode';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Navigate, useParams, useNavigate } from 'react-router-dom';
 
-function Enrollment() {
-    const { courseId } = useParams();
-    const navigate = useNavigate();
+function Enrollment({baseURL}) {
+    const { courseId } = useParams(); // Get the course ID from the URL
     const [enrollmentStatus, setEnrollmentStatus] = useState(null);
     const token = sessionStorage.getItem('Token');
-    console.log("Course ID:", courseId); // Debugging line
-
-
-    /*const getStudentIdFromToken = (token) => {
-        try {
-            const decoded = jwtDecode(token);
-            return decoded.student_id; // Ensure this matches the token field
-        } catch (error) {
-            console.error("Failed to decode token:", error);
-            return null;
-        }
-    };*/
+    const navigate = useNavigate();
+    console.log("Token from localStorage:", token); // Assuming the token is stored in sessionStorage
 
     const handleEnroll = useCallback(async () => {
-
         try {
-            const response = await fetch('http://127.0.0.1:5555/enrollments', {
+            const response = await fetch(`${baseURL}/enrollments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,7 +27,8 @@ function Enrollment() {
 
             if (response.ok) {
                 setEnrollmentStatus("Enrollment successful!");
-                setTimeout(() => navigate('/mycourses?refresh=true'), 2000);
+                navigate("/StudentDashboard")
+               // setTimeout(() => navigate('/my-courses'), 2000);
             } else {
                 setEnrollmentStatus(data.error || "Failed to enroll in the course. Please try again.");
             }

@@ -10,7 +10,7 @@ function CourseList({loggedIn, baseURL}) {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`${baseURL}/courses`, {
+        const response = await fetch(`${baseURL}/unauthCourses`, {
           method: "GET", 
           headers: {
             "Content-Type": "application/json",

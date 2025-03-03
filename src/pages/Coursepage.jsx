@@ -1,20 +1,21 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const CoursesPage = () => {
+const CoursesPage = ({baseURL, loggedIn}) => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const token = sessionStorage.getItem("Token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5555/courses", {
+        const response = await fetch(`${baseURL}/unauthCourses`, {
           method: "GET", // Explicitly setting the method
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // If authentication is needed
+            Authorization: `Bearer ${sessionStorage.getItem("Token")}`, // If authentication is needed
+
           },
         });
   
@@ -35,6 +36,10 @@ const CoursesPage = () => {
   }, [token]);
   
 
+  function HandleEnroll(e) {
+    navigate(`/Enroll/${e.target.id}`)
+  }
+
 
 
   if (loading) return <p className="text-center text-gray-500">Loading courses...</p>;
@@ -47,9 +52,9 @@ const CoursesPage = () => {
         <h2 className="text-lg font-semibold mb-3">Courses</h2>
         <ul>
           {courses.map((course) => (
-            <li key={course.id} className="mb-2">
+            <li key={course._id} className="mb-2">
               <a
-                href={`#course-${course.id}`}
+                href={`#course-${course._id}`}
                 className="block p-2 bg-blue-100 hover:bg-blue-200 rounded-md"
               >
                 {course.title}
@@ -64,22 +69,12 @@ const CoursesPage = () => {
         {courses.length > 0 ? (
           courses.map((course) => (
             <div
-              key={course.id}
-              id={`course-${course.id}`}
+              key={course._id}
+              id={`course-${course._id}`}
               className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6"
             >
               <h1 className="text-3xl font-bold text-center">{course.title}</h1>
-              <p className="text-center text-gray-600 mb-4">Duration: {course.duration} hours</p>
-
-              {/* Enroll Button */}
-              <div className="text-center mb-4">
-                <Link
-                  to={`/enroll/${course.id}`}
-                  className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
-                >
-                  Enroll Now
-                </Link>
-              </div>
+              <p className="text-center text-gray-600 mb-4">Duration: {course.duration} Years</p>
 
               {/* Course Overview */}
               <div className="mb-4">
@@ -97,17 +92,39 @@ const CoursesPage = () => {
                     </li>
                   ))}
                 </ul>
-                <Link to={`/courses/${course.id}/lessons`} className="text-blue-500 hover:underline">
+                {/* <Link to={`/courses/${course._id}/lessons`} className="text-blue-500 hover:underline">
                   Go to Lessons
-                </Link>
+                </Link> */}
               </div>
 
               {/* Teacher Details */}
+              {course.teacher ? 
               <div className="mb-4">
                 <h2 className="text-lg font-semibold">Teacher</h2>
                 <p className="font-semibold">
-                  {course.teacher_name ? `Teacher: ${course.teacher_name}` : "Unknown Teacher"}
+                  Teacher: {course.teacher.name}
                 </p>
+              </div>:
+              null}
+
+              {/* Enroll Button */}
+              <div className="text-center mb-4">
+                {loggedIn ?
+                  <Link
+                    id={course._id}
+                    to={`/StudentDashboard`}
+                    className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+                    onClick={(e) => HandleEnroll(e)}
+                  >
+                  Enroll Now
+                  </Link>:
+                  <Link
+                    to={"/login"}
+                      className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+                  >
+                  Enroll Now
+                  </Link>
+                }
               </div>
             </div>
           ))
