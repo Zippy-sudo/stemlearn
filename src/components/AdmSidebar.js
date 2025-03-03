@@ -1,6 +1,6 @@
 function AdmSidebar({ setSelectedPage }) {
     return (
-      <div className="w-64 h-screen bg-gray-800 text-white p-4">
+      <div className="w-64 min-h-screen bg-gray-800 text-white p-4">
         <h2 className="text-xl font-bold mb-4">Admin Dashboard</h2>
         <ul className="space-y-2">
           <li>
