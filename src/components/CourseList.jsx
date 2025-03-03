@@ -15,7 +15,7 @@ function CourseList({loggedIn, baseURL}) {
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("Token")}`, 
+            Authorization: `Bearer ${sessionStorage.getItem("Token")}`, 
           },
         });
   
