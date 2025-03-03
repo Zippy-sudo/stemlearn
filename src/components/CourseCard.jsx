@@ -21,17 +21,9 @@ function CourseCard({course, loggedIn}) {
         <p className="course-description">
           {course.description.length > 80 ? `${course.description.substring(0, 80)}...` : course.description}
         </p>
-
-        
-        { loggedIn ?
-          <Link to={`/courses`} className="view-course">
+          <Link to={`/Courses`} className="view-course">
           View Course →
         </Link>
-        :
-        <Link to={"/login"} className="view-course">
-        View Course →
-        </Link>
-        }
       </div>
     </div>
   );

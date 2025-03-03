@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 
-function StudentDashboard() {
-    const [courses, setCourses] = useState([]);
-    const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+function StudentDashboard({baseURL}) {
+    const [enrollments, setEnrollments] = useState([]);
+    const [studentName, setStudentName] = useState("")
+    const token = sessionStorage.getItem('Token'); // Assuming the token is stored in sessionStorage
 
     useEffect(() => {
         // Fetch enrolled courses
         async function fetchMyCourses() {
             try {
-                const response = await fetch('http://127.0.0.1:5555/my-courses', {
+                const response = await fetch(`${baseURL}/enrollments`, {
                     headers: {
-                        'Authorization': `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                 });
                 const data = await response.json();
                 if (response.ok) {
-                    setCourses(data);
+                    setEnrollments(data);
+                    setStudentName((data[0].student.name).slice(0,1).toUpperCase() + data[0].student.name.slice(1).toLowerCase())
                 } else {
                     console.error('Failed to fetch courses:', data.error);
                 }
             } catch (error) {
-                console.error('Failed to fetch courses:', error);
+                console.error(`Failed to fetch courses:`, error);
             }
         }
 
@@ -31,23 +34,23 @@ function StudentDashboard() {
     return (
         <div>
             <h1>Student Dashboard</h1>
-            <Sidebar />
+            <Sidebar studentName={studentName}/>
             <button onClick={() => document.getElementById('my-courses-section').scrollIntoView({ behavior: 'smooth' })}>
                 My Courses
             </button>
 
             <div id="my-courses-section">
                 <h2>My Courses</h2>
-                {courses.length > 0 ? (
+                {enrollments.length > 0 ? (
                     <ul>
-                        {courses.map(course => (
-                            <li key={course.id}>
-                                <h3>{course.title}</h3>
-                                <p>{course.description}</p>
-                                <p><strong>Subject:</strong> {course.subject}</p>
-                                <p><strong>Duration:</strong> {course.duration} hours</p>
-                                <p><strong>Enrolled On:</strong> {course.enrolled_on}</p>
-                                <p><strong>Completion:</strong> {course.completion_percentage}%</p>
+                        {enrollments.map(enrollment => (
+                            <li key={enrollment._id}>
+                                <h3>{enrollment.course.title}</h3>
+                                <p>{enrollment.course.description}</p>
+                                <p><strong>Subject:</strong> {enrollment.course.subject}</p>
+                                <p><strong>Duration:</strong> {enrollment.course.duration} hours</p>
+                                <p><strong>Enrolled On:</strong> {enrollment.enrolled_on}</p>
+                                <p><strong>Completion:</strong> {enrollment.progresses}%</p>
                             </li>
                         ))}
                     </ul>

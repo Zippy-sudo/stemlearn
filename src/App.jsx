@@ -15,22 +15,22 @@ import MyCourses from './components/MyCourses';
 import Enrollment from './components/Enrollment';
 
 function App() {
-  const baseURL = "https://stemlearn-db.onrender.com/"
+  const baseURL = "https://stemlearn-db.onrender.com"
   const [loggedIn, setLoggedIn] = useState(false)
 
   return (
     <Router>
-      <Navbar />
+      <Navbar loggedIn={loggedIn}/>
       <Routes>
         <Route path="/" element={<Homepage loggedIn={loggedIn} baseURL={baseURL}/>} />
-        <Route path="/signup" element={<SignUp setLoggedIn={setLoggedIn} baseURL={baseURL}/>} />
-        <Route path="/login" element={<Login setLoggedIn={setLoggedIn} baseURL={baseURL}/>} />
+        <Route path="/Signup" element={<SignUp setLoggedIn={setLoggedIn} baseURL={baseURL}/>} />
+        <Route path="/Login" element={<Login setLoggedIn={setLoggedIn} baseURL={baseURL}/>} />
         <Route path="/AdmDashboard" element={<AdmDashboard baseURL={baseURL}/>} />
         <Route path="/admin/dashboard" element={<AdminRoute><AdmDashboard baseURL={baseURL}/></AdminRoute>} />
-        <Route path="/courses" element={<CoursesPage/>}/>
-        <Route path="/studentDashboard" element={<StudentDashboard/>}/>
-        <Route path="/mycourses" element ={<MyCourses/>}/>
-        <Route path="/enroll/:courseId" element={<Enrollment/>}/>
+        <Route path="/Courses" element={<CoursesPage baseURL={baseURL} loggedIn={loggedIn}/>}/>
+        <Route path="/StudentDashboard" element={<StudentDashboard baseURL={baseURL}/>}/>
+        <Route path="/Mycourses" element ={<MyCourses/>}/>
+        <Route path="/Enroll/:courseId" element={<Enrollment baseURL={baseURL}/>}/>
 
       </Routes>
     </Router>

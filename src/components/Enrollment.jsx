@@ -1,39 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Correct import
+import { Navigate, useParams, useNavigate } from 'react-router-dom';
 
-function Enrollment() {
+function Enrollment({baseURL}) {
     const { courseId } = useParams(); // Get the course ID from the URL
     const [enrollmentStatus, setEnrollmentStatus] = useState(null);
-    const token = localStorage.getItem('Token');
-    console.log("Token from localStorage:", token); // Assuming the token is stored in localStorage
-
-    // Function to decode the token and get the student's public_id
-    const getStudentIdFromToken = (token) => {
-        try {
-            const decoded = jwtDecode(token); // Use the named import
-            return decoded.public_id; // Assuming the token contains the student's public_id
-        } catch (error) {
-            console.error("Failed to decode token:", error);
-            return null;
-        }
-    };
+    const token = sessionStorage.getItem('Token');
+    const navigate = useNavigate();
+    console.log("Token from localStorage:", token); // Assuming the token is stored in sessionStorage
 
     // Memoize the handleEnroll function using useCallback
     const handleEnroll = useCallback(async () => {
-        const studentId = getStudentIdFromToken(token);
-        if (!studentId) {
-            setEnrollmentStatus("Failed to fetch student ID. Please sign in again.");
-            return;
-        }
     
         console.log("Attempting Enrollment...");
-        console.log("Student ID:", studentId);
         console.log("Course ID:", courseId);
         console.log("Authorization Header:", `Bearer ${token}`);
     
         try {
-            const response = await fetch('http://127.0.0.1:5555/enrollments', {
+            const response = await fetch(`${baseURL}/enrollments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,7 +24,6 @@ function Enrollment() {
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    student_id: studentId,
                     course_id: courseId,
                 }),
             });
@@ -51,6 +33,7 @@ function Enrollment() {
     
             if (response.ok) {
                 setEnrollmentStatus("Enrollment successful!");
+                navigate("/StudentDashboard")
                // setTimeout(() => navigate('/my-courses'), 2000);
             } else {
                 setEnrollmentStatus(data.error || "Failed to enroll in the course.");

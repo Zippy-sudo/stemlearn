@@ -1,9 +1,10 @@
 import React from "react"
 import { Link } from "react-router-dom"
 import { FaHome, FaBook, FaChartBar, FaCommentDots } from "react-icons/fa";
-
+import profile from "../images/profile.png"
   
-function Sidebar(){
+function Sidebar({studentName}){
+  console.log(studentName)
     return (
         <div className="h-screen w-64 bg-blue-900 text-white flex flex-col items-center py-6">
           {/* Logo */}
@@ -50,11 +51,11 @@ function Sidebar(){
           {/* Profile Section */}
           <div className="mt-auto flex flex-col items-center">
             <img
-              src="https://via.placeholder.com/50"
+              src={profile}
               alt="User Avatar"
               className="w-12 h-12 rounded-full mb-2"
-            />
-            <p className="text-sm">Student Name</p>
+            />            <p className="text-sm">{studentName}</p>
+
           </div>
         </div>
       );

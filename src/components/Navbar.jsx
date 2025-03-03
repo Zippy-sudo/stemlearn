@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
 
-function Navbar() {
+function Navbar({loggedIn}) {
   const [searchTerm, setSearchTerm] = useState('');
-
+  const whoami = sessionStorage.getItem("Role")
   
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -19,10 +19,15 @@ function Navbar() {
         
         <ul className="navbar-list">
           <li><Link to="/">Home</Link></li>
+          {whoami == "STUDENT" && loggedIn ? 
+          <li><Link to="/StudentDashboard">Dashboard</Link></li>
+          : whoami == "STUDENT" && loggedIn ?
           <li><Link to="/admin/dashboard">Dashboard</Link></li>
+          : null
+          }
           <li><Link to="/courses">Courses</Link></li>
           <li><Link to="/lessons">Lessons</Link></li>
-          <li><Link to="/studentDashboard">Feedback</Link></li>
+          <li><Link to="/StudentDashboard">Feedback</Link></li>
         </ul>
 
       

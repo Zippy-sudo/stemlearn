@@ -50,8 +50,10 @@ function Login({setLoggedIn, baseURL}) {
 
       if (data.Role === "ADMIN") {
         navigate("/AdmDashboard");
+      } else if (data.Role === "STUDENT"){
+        navigate("/StudentDashboard");
       } else {
-        navigate("/");
+        /*TEACHER DASHBOARD*/
       }
       
     } catch (err) {
@@ -104,7 +106,7 @@ function Login({setLoggedIn, baseURL}) {
         
         <p className="text-center text-gray-600">
           Don't have an account?{" "}
-          <button onClick={() => navigate("/")} className="text-purple-500 hover:underline">
+          <button onClick={() => navigate("/signup")} className="text-purple-500 hover:underline">
             Sign up
           </button>
         </p>
