@@ -15,6 +15,7 @@ const CoursesPage = ({baseURL, loggedIn}) => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${sessionStorage.getItem("Token")}`, // If authentication is needed
+
           },
         });
   
@@ -32,7 +33,7 @@ const CoursesPage = ({baseURL, loggedIn}) => {
     };
   
     fetchCourses();
-  }, []);
+  }, [token]);
   
 
   function HandleEnroll(e) {
