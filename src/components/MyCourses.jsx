@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 function MyCourses(){
 
     const [courses, setCourses] = useState([]);
-    const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+    const token = sessionStorage.getItem('Token'); // Assuming the token is stored in localStorage
 
     useEffect(() => {
         // Fetch enrolled courses
         async function fetchMyCourses() {
             try {
-                const response = await fetch('http://127.0.0.1:5555/my-courses', {
+                const response = await fetch('http://127.0.0.1:5555/courses', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },

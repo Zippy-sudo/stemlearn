@@ -5,6 +5,7 @@ const CoursesPage = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const token = sessionStorage.getItem("Token");
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -13,7 +14,7 @@ const CoursesPage = () => {
           method: "GET", // Explicitly setting the method
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("Token")}`, // If authentication is needed
+            Authorization: `Bearer ${token}`, // If authentication is needed
           },
         });
   
@@ -31,7 +32,7 @@ const CoursesPage = () => {
     };
   
     fetchCourses();
-  }, []);
+  }, [token]);
   
 
 
