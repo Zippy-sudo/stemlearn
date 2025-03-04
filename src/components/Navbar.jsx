@@ -19,9 +19,9 @@ function Navbar({loggedIn}) {
         
         <ul className="navbar-list">
           <li><Link to="/">Home</Link></li>
-          {whoami == "STUDENT" && loggedIn ? 
+          {whoami === "STUDENT" && loggedIn ? 
           <li><Link to="/StudentDashboard">Dashboard</Link></li>
-          : whoami == "ADMIN" && loggedIn ?
+          : whoami === "ADMIN" && loggedIn ?
           <li><Link to="/admin/dashboard">Dashboard</Link></li>
           : null
           }

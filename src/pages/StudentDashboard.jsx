@@ -32,7 +32,7 @@ function StudentDashboard({baseURL}) {
         }
 
         fetchMyCourses();
-    }, [token]);
+    }, [token, baseURL]);
 
     return (
         <div>

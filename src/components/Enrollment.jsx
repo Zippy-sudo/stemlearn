@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Navigate, useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function Enrollment({baseURL}) {
     const { courseId } = useParams(); // Get the course ID from the URL
@@ -36,7 +36,7 @@ function Enrollment({baseURL}) {
             console.error("Enrollment Error:", error);
             setEnrollmentStatus("An error occurred. Please check your connection and try again.");
         }
-    }, [token, courseId, navigate]);
+    }, [token, courseId, baseURL, navigate]);
 
     return (
         <div className="p-4">
