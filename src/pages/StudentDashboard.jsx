@@ -9,7 +9,7 @@ function StudentDashboard() {
         // Fetch enrolled courses
         async function fetchMyCourses() {
             try {
-                const response = await fetch('http://127.0.0.1:5555/my-courses', {
+                const response = await fetch('http://127.0.0.1:5555/courses', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },

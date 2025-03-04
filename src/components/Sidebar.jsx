@@ -30,10 +30,10 @@ function Sidebar(){
               </li>
               <li>
                 <Link
-                  to="/grades"
+                  to="/certificates"
                   className="flex items-center px-6 py-3 w-full hover:bg-blue-700 transition"
                 >
-                  <FaChartBar className="mr-3" /> Grades
+                  <FaChartBar className="mr-3" /> Achievements
                 </Link>
               </li>
               <li>

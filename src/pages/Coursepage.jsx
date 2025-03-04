@@ -74,7 +74,7 @@ const CoursesPage = () => {
               {/* Enroll Button */}
               <div className="text-center mb-4">
                 <Link
-                  to={`/enroll/${course.id}`}
+                  to={`/enroll/${course._id}`}
                   className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
                 >
                   Enroll Now

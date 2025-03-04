@@ -13,9 +13,10 @@ import CoursesPage from './pages/Coursepage';
 import StudentDashboard from './pages/StudentDashboard';
 import MyCourses from './components/MyCourses';
 import Enrollment from './components/Enrollment';
+import CertificatesPage from './components/Certificates';
 
 function App() {
-  const baseURL = "https://stemlearn-db.onrender.com/"
+  const baseURL = "http://127.0.0.1:5555"
   const [loggedIn, setLoggedIn] = useState(false)
 
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/studentDashboard" element={<StudentDashboard/>}/>
         <Route path="/mycourses" element ={<MyCourses/>}/>
         <Route path="/enroll/:courseId" element={<Enrollment/>}/>
+        <Route path="/certificates" element={<CertificatesPage/>}/>
 
       </Routes>
     </Router>
