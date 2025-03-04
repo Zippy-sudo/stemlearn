@@ -19,7 +19,10 @@ function StudentDashboard({baseURL}) {
                 const data = await response.json();
                 if (response.ok) {
                     setEnrollments(data);
-                    setStudentName((data[0].student.name).slice(0,1).toUpperCase() + data[0].student.name.slice(1).toLowerCase())
+                    let capname = ""
+                    for (const word of data[0].student.name.split(" ")) 
+                        {capname += (word).slice(0,1).toUpperCase() + word.slice(1).toLowerCase() + " "}
+                    setStudentName(capname)
                 } else {
                     console.error('Failed to fetch courses:', data.error);
                 }
@@ -43,14 +46,14 @@ function StudentDashboard({baseURL}) {
                 <h2>My Courses</h2>
                 {enrollments.length > 0 ? (
                     <ul>
-                        {enrollments.map(enrollment => (
+                        {enrollments.map((enrollment) => (
                             <li key={enrollment._id}>
                                 <h3>{enrollment.course.title}</h3>
                                 <p>{enrollment.course.description}</p>
                                 <p><strong>Subject:</strong> {enrollment.course.subject}</p>
-                                <p><strong>Duration:</strong> {enrollment.course.duration} hours</p>
+                                <p><strong>Duration:</strong> {enrollment.course.duration} Years</p>
                                 <p><strong>Enrolled On:</strong> {enrollment.enrolled_on}</p>
-                                <p><strong>Completion:</strong> {enrollment.progresses}%</p>
+                                <p><strong>Completion:</strong> {(enrollment.progresses).length > 0 ? `${Math.round((enrollment.progresses).length/(enrollment.course.lessons).length) * 100} %`  : "0%"}</p>
                             </li>
                         ))}
                     </ul>

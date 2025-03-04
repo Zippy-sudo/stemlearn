@@ -15,7 +15,7 @@ function Sidebar({studentName}){
             <ul className="space-y-4">
               <li>
                 <Link
-                  to="/dashboard"
+                  to="/"
                   className="flex items-center px-6 py-3 w-full hover:bg-blue-700 transition"
                 >
                   <FaHome className="mr-3" /> Home
@@ -23,7 +23,7 @@ function Sidebar({studentName}){
               </li>
               <li>
                 <Link
-                  to="/mycourses"
+                  to="/Mycourses"
                   className="flex items-center px-6 py-3 w-full hover:bg-blue-700 transition"
                 >
                   <FaBook className="mr-3" /> My Courses

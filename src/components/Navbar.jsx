@@ -21,7 +21,7 @@ function Navbar({loggedIn}) {
           <li><Link to="/">Home</Link></li>
           {whoami == "STUDENT" && loggedIn ? 
           <li><Link to="/StudentDashboard">Dashboard</Link></li>
-          : whoami == "STUDENT" && loggedIn ?
+          : whoami == "ADMIN" && loggedIn ?
           <li><Link to="/admin/dashboard">Dashboard</Link></li>
           : null
           }
