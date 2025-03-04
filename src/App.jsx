@@ -15,7 +15,7 @@ import MyCourses from './components/MyCourses';
 import Enrollment from './components/Enrollment';
 
 function App() {
-  const baseURL = "https://stemlearn-db.onrender.com"
+  const baseURL = "https://stemlearn-app-db.onrender.com"
   const [loggedIn, setLoggedIn] = useState(false)
 
   return (
