@@ -33,7 +33,7 @@ const CoursesPage = ({baseURL, loggedIn}) => {
     };
   
     fetchCourses();
-  }, [token]);
+  }, []);
   
 
   function HandleEnroll(e) {
