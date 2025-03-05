@@ -97,7 +97,7 @@ const CoursesPage = () => {
                     </li>
                   ))}
                 </ul>
-                <Link to={`/courses/${course.id}/lessons`} className="text-blue-500 hover:underline">
+                <Link to={`/lessons`} className="text-blue-500 hover:underline">
                   Go to Lessons
                 </Link>
               </div>
