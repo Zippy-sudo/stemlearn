@@ -8,12 +8,12 @@ import Login from "./components/Login";
 import Navbar from './components/Navbar';
 
 import AdmDashboard from './pages/AdmDashboard';
-import AdminRoute from './components/protectedRoute';
+// import AdminRoute from './components/protectedRoute';
 import CoursesPage from './pages/Coursepage';
 import StudentDashboard from './pages/StudentDashboard';
 import MyCourses from './components/MyCourses';
 import Enrollment from './components/Enrollment';
-import TeacherRoute from './components/TeacherRoute';
+// import TeacherRoute from './components/TeacherRoute';
 import TeacherDashboard from './pages/TeacherDashboard';
 
 function App() {

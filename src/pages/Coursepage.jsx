@@ -5,13 +5,11 @@ const CoursesPage = ({baseURL, loggedIn}) => {
   const [courses, setCourses] = useState([]);
   const [coursesToDisplay, setCoursesToDisplay] = useState([])
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
   const [subject, setSubject] = useState('All')
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value)
     if (subject === "All"){
       let ctd = courses.filter((course) => course.title.toUpperCase().includes(e.target.value.trim().toUpperCase()))
       setCoursesToDisplay(ctd)
@@ -20,6 +18,7 @@ const CoursesPage = ({baseURL, loggedIn}) => {
     let ctd = courses.filter((course) => course.title.toUpperCase().includes(e.target.value.trim().toUpperCase()) && course.subject === subject)
     setCoursesToDisplay(ctd)
   };
+
   const handleSubjectChange = (e) => {
     setSubject(e.target.value)
     let ctd = courses.filter((course) => course.subject === e.target.value)
