@@ -2,11 +2,11 @@ import React, { useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 function Enrollment({baseURL}) {
-    const { courseId } = useParams(); // Get the course ID from the URL
+    const { courseId } = useParams();
     const [enrollmentStatus, setEnrollmentStatus] = useState(null);
     const token = sessionStorage.getItem('Token');
     const navigate = useNavigate();
-    console.log("Token from localStorage:", token); // Assuming the token is stored in sessionStorage
+    console.log("Token from localStorage:", token); 
 
     const handleEnroll = useCallback(async () => {
         try {
