@@ -225,6 +225,5 @@ function CourseManagement({ baseURL }) {
 }
 
 export default CourseManagement;
-
 // fetches available courses that are in the database
 // A form to create, edit, and delete a course
