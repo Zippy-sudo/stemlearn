@@ -32,7 +32,9 @@ function MyCourses(){
         <div>
         
             <div id="my-courses-section">
+                <div>
                 <h2>My Courses</h2>
+                </div>
                 {courses.length > 0 ? (
                     <ul>
                         {courses.map(course => (

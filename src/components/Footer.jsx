@@ -4,10 +4,10 @@ import "../Footer.css"; // Import styles
 
 const Footer = () => {
   return (
-    <footer className="footer">
+    <footer className="footer bg-main-yellow">
       <div className="footer-content">
         <h1>Contact Us</h1>
-        <p>&copy; 2025 STEMLearn. All rights reserved.</p>
+        <p className="bg-transparent">&copy; 2025 STEMLearn. All rights reserved.</p>
         <div className="social-links">
           <a
             href="https://www.facebook.com/"

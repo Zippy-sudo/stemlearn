@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
 
-function Navbar({loggedIn}) {
-  const [searchTerm, setSearchTerm] = useState('');
+function Navbar({loggedIn, setLoggedIn}) {
   const whoami = sessionStorage.getItem("Role")
-  
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+
+  function handleLogout() {
+    sessionStorage.removeItem("Token")
+    sessionStorage.removeItem("Role")
+    setLoggedIn(!loggedIn)
+  }
 
   return (
     <nav className="navbar">
@@ -19,35 +20,40 @@ function Navbar({loggedIn}) {
         
         <ul className="navbar-list">
           <li><Link to="/">Home</Link></li>
-          {whoami === "STUDENT" && loggedIn ? 
+          {whoami === "STUDENT" ? 
           <li><Link to="/StudentDashboard">Dashboard</Link></li>
-          : whoami === "ADMIN" && loggedIn ?
+          : whoami === "ADMIN" ?
           <li><Link to="/admin/dashboard">Dashboard</Link></li>
-          : null
+          : whoami === "TEACHER" ?
+          <li><Link to="teacher/dashboard">Dashboard</Link></li>
+          :null
           }
           <li><Link to="/courses">Courses</Link></li>
-          <li><Link to="/lessons">Lessons</Link></li>
+          { whoami === "STUDENT" ?
+          <>
           <li><Link to="/StudentDashboard">Feedback</Link></li>
+          <li><Link to="/lessons">Lessons</Link></li>
+          </>
+          : whoami === "TEACHER" ?
+          <li><Link to="/teacher/dashboard">Feedback</Link></li>
+          : null}
         </ul>
-
-      
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="search-input"
-        />
-
-        
+        {loggedIn ?
         <div className="auth-buttons">
-          <button className="login-btn">
-            <Link to="/login">Login</Link>
-          </button>
-          <button className="signup-btn">
-            <Link to="/signup">Sign Up</Link>
+          <button className="login-btn" onClick={handleLogout}>
+            <Link to="/">Logout</Link>
           </button>
         </div>
+        :
+        <div className="auth-buttons">
+        <button className="login-btn">
+          <Link to="/login">Login</Link>
+        </button>
+        <button className="signup-btn bg-main-yellow">
+          <Link to="/signup">Sign Up</Link>
+        </button>
+        </div>
+        }
       </div>
     </nav>
   );
