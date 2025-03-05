@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
+import StudentSidebar from '../components/StudentSidebar';
 
 function StudentDashboard({baseURL}) {
     const [enrollments, setEnrollments] = useState([]);
@@ -24,7 +24,11 @@ function StudentDashboard({baseURL}) {
                         {capname += (word).slice(0,1).toUpperCase() + word.slice(1).toLowerCase() + " "}
                     setStudentName(capname)
                 } else {
-                    console.error('Failed to fetch courses:', data.error);
+                    console.error('Failed to fetch courses:', data.Error);
+                    let capname = ""
+                    for (const word of data.Name.split(" ")) 
+                        {capname += (word).slice(0,1).toUpperCase() + word.slice(1).toLowerCase() + " "}
+                    setStudentName(capname)
                 }
             } catch (error) {
                 console.error(`Failed to fetch courses:`, error);
@@ -35,15 +39,15 @@ function StudentDashboard({baseURL}) {
     }, [token, baseURL]);
 
     return (
-        <div>
-            <h1>Student Dashboard</h1>
-            <Sidebar studentName={studentName}/>
+        <div className='flex'>
+            <StudentSidebar studentName={studentName}/>
             <button onClick={() => document.getElementById('my-courses-section').scrollIntoView({ behavior: 'smooth' })}>
-                My Courses
             </button>
 
             <div id="my-courses-section">
-                <h2>My Courses</h2>
+                <div className='text-center pt-4 pb-4 bg-main-yellow'>
+                <h2 className='text-xl'>My Courses</h2>
+                </div>
                 {enrollments.length > 0 ? (
                     <ul>
                         {enrollments.map((enrollment) => (

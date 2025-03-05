@@ -26,7 +26,7 @@ function Features() {
         <div className="feature-card">
           <span className="icon">🔍</span>
           <h3>Find a Course</h3>
-          <p>Search by subject, course, or region to find the right course for you.</p>
+          <p>Search by name or filter by subject to find the right course for you.</p>
           <Link to="/Courses" className="btn-link">Get Started →</Link>
         </div>
 
