@@ -1,3 +1,4 @@
+/* General Styles */
 body {
   font-family: Arial, sans-serif;
   background-color: #f8f9fa;
@@ -37,6 +38,7 @@ body {
   font-weight: bold;
 }
 
+/* Upcoming Quizzes Section */
 .upcoming-quizzes {
   background-color: white;
   padding: 20px;
@@ -88,6 +90,7 @@ body {
   background-color: #45a049;
 }
 
+/* Loading and Error Messages */
 .loading,
 .error {
   text-align: center;
