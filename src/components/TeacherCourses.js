@@ -59,7 +59,7 @@ function TeacherCourses({ baseURL }) {
     setLoading(true);
     setError(null);
     setSelectedCourseId(courseId);
-    const data = await apiRequest(`${baseURL}/courses/${courseId}/lessons`, "GET");
+    const data = await apiRequest(`${baseURL}/courses//${courseId}/lessons`, "GET");
     if (data) {
       setLessons(data);
     }

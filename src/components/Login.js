@@ -15,48 +15,39 @@ function Login({setLoggedIn, baseURL}) {
     event.preventDefault();
     setError("");
     setLoading(true);
-    console.log("Form data:", formData);
-
+    
     try {
       const response = await fetch(`${baseURL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      console.log("Response Status:", response.status);
 
       const data = await response.json();
       setLoading(false);
 
       if (!response.ok) {
-        console.log("Response Error:", data);
-        setError(data.error || "Something went wrong!");
+        setError(data.error);
         return;
       }
-
-      console.log("Response Data:", data);
 
       try {
         sessionStorage.setItem("Token", data["Token"]);
         sessionStorage.setItem("Role", data["Role"]);
-        console.log("Role Saved in sessionStorage:", sessionStorage.getItem("Role"));
         
       } catch (storageError) {
         console.error("Storage access error:", storageError);
       }
 
-      alert("Login successful!");
       setLoggedIn(true);
 
       if (data.Role === "ADMIN") {
         navigate("/AdmDashboard");
       }
-      else if (data.Role === "TEACHER") {
+      else if (data.Role === "STUDENT") {
+        navigate("/StudentDashboard");
+      }else {
         navigate("/TeacherDashboard");
-      }
-
-      else {
-        navigate("/");
       }
       
     } catch (err) {
@@ -109,7 +100,7 @@ function Login({setLoggedIn, baseURL}) {
         
         <p className="text-center text-gray-600">
           Don't have an account?{" "}
-          <button onClick={() => navigate("/")} className="text-purple-500 hover:underline">
+          <button onClick={() => navigate("/signup")} className="text-purple-500 hover:underline">
             Sign up
           </button>
         </p>

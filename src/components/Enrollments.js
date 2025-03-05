@@ -46,19 +46,19 @@ function Enrollments({ baseURL }) {
     setLoading(true);
     setError(null);
     const url = courseId
-      ? `${baseURL}/admin/enrollments?course_id=${courseId}`
-      : `${baseURL}/admin/enrollments`;
+    ? `${baseURL}/enrollments/${courseId}`
+    : `${baseURL}/enrollments`;
     const data = await apiRequest(url, "GET");
 
     if (data) {
       console.log("API Response:", data);
-      setEnrollments(data.enrollments || data);
-      if (data.analytics) {
-        setAnalytics(data.analytics);
-      } else {
-        setAnalytics(null);
+      setEnrollments(data);
+      let completions = 0
+      for (const enrollment of enrollments){
+        completions += enrollment.completion_percentage
       }
-    }
+        setAnalytics({total_students:data.length, average_completion : Math.round(completions/enrollments.length * 100)});
+      }
     setLoading(false);
   }, [baseURL, courseId]);
 
