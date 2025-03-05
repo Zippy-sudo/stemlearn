@@ -1,4 +1,4 @@
-function Sidebar({ setSelectedPage }) {
+function TeacherSidebar({ setSelectedPage }) {
     return (
       <div className="w-64 min-h-screen bg-gray-800 text-white p-4">
         <h2 className="text-xl font-bold mb-4">Teacher Dashboard</h2>
@@ -17,6 +17,5 @@ function Sidebar({ setSelectedPage }) {
       </div>
     );
   }
-  
-  export default Sidebar;
-  
+
+  export default TeacherSidebar;
