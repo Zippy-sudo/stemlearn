@@ -41,7 +41,9 @@ function CourseList({loggedIn, baseURL}) {
 
   return (
     <div className="popular-courses">
+      <div className='text-center'>
       <h2>Most Popular Courses</h2>
+      </div>
       <div className="courses-container">
         {courses.map((course) => (
           <CourseCard key={course._id} course={course} loggedIn={loggedIn} />

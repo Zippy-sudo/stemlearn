@@ -3,12 +3,19 @@ import { Link } from "react-router-dom"
 import { FaHome, FaBook, FaChartBar, FaCommentDots } from "react-icons/fa";
 import profile from "../images/profile.png"
   
-function Sidebar({studentName}){
-  console.log(studentName)
+function StudentSidebar({studentName}){
     return (
-        <div className="h-screen w-64 bg-blue-900 text-white flex flex-col items-center py-6">
-          {/* Logo */}
-          <h2 className="text-2xl font-bold mb-8">STEMLearn</h2>
+      <div className="h-screen bg-blue-900 mr-2">
+        <div className="w-64 bg-blue-900 text-white flex flex-col items-start  items-center mr-6 p-4">
+          {/* Profile Section */}
+            <div className="mt-auto flex flex-col items-center">
+            <img
+              src={profile}
+              alt="User Avatar"
+              className="w-12 h-12 rounded-full mb-2"
+            /> <p className="text-smm bg-transparent text-white">{studentName}</p>
+          </div>
+
     
           {/* Navigation */}
           <nav className="w-full">
@@ -23,7 +30,7 @@ function Sidebar({studentName}){
               </li>
               <li>
                 <Link
-                  to="/Mycourses"
+                  to="/StudentDashboard"
                   className="flex items-center px-6 py-3 w-full hover:bg-blue-700 transition"
                 >
                   <FaBook className="mr-3" /> My Courses
@@ -47,17 +54,8 @@ function Sidebar({studentName}){
               </li>
             </ul>
           </nav>
-    
-          {/* Profile Section */}
-          <div className="mt-auto flex flex-col items-center">
-            <img
-              src={profile}
-              alt="User Avatar"
-              className="w-12 h-12 rounded-full mb-2"
-            />            <p className="text-sm">{studentName}</p>
-
-          </div>
         </div>
+      </div>
       );
     }
-export default Sidebar
+export default StudentSidebar

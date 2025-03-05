@@ -3,9 +3,28 @@ import { Link, useNavigate } from "react-router-dom";
 
 const CoursesPage = ({baseURL, loggedIn}) => {
   const [courses, setCourses] = useState([]);
+  const [coursesToDisplay, setCoursesToDisplay] = useState([])
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [subject, setSubject] = useState('All')
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value)
+    if (subject === "All"){
+      let ctd = courses.filter((course) => course.title.toUpperCase().includes(e.target.value.trim().toUpperCase()))
+      setCoursesToDisplay(ctd)
+      return
+    }
+    let ctd = courses.filter((course) => course.title.toUpperCase().includes(e.target.value.trim().toUpperCase()) && course.subject === subject)
+    setCoursesToDisplay(ctd)
+  };
+  const handleSubjectChange = (e) => {
+    setSubject(e.target.value)
+    let ctd = courses.filter((course) => course.subject === e.target.value)
+    setCoursesToDisplay(ctd)
+  }
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -25,6 +44,7 @@ const CoursesPage = ({baseURL, loggedIn}) => {
   
         const data = await response.json();
         setCourses(data);
+        setCoursesToDisplay(data)
       } catch (err) {
         setError(err.message);
       } finally {
@@ -46,8 +66,26 @@ const CoursesPage = ({baseURL, loggedIn}) => {
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
-    <div className="flex">
+  <div className="flex flex-col">
+    <div className="mx-auto p-4">
+    {/* Search Here */}
+      <input type="text"
+      placeholder="Search..."
+      onChange={handleSearchChange}
+      >
+      </input>
+      <select value="subject" onChange={handleSubjectChange}>
+        <option value="All">All</option>
+        <option value="Mathematics">Mathematics</option>
+        <option value="Physics">Physics</option>
+        <option value="Biology">Biology</option>
+        <option value="Computer Science">Computer Science</option>
+        <option value="Engineering">Engineering</option>
+      </select>
+      </div>
+
       {/* Sidebar */}
+      <div className="flex">
       <aside className="w-1/4 bg-gray-100 p-4 h-screen overflow-y-auto border-r">
         <h2 className="text-lg font-semibold mb-3">Courses</h2>
         <ul>
@@ -66,8 +104,8 @@ const CoursesPage = ({baseURL, loggedIn}) => {
 
       {/* Main Content */}
       <div className="w-3/4 p-6">
-        {courses.length > 0 ? (
-          courses.map((course) => (
+        {coursesToDisplay.length > 0 ? (
+          coursesToDisplay.map((course) => (
             <div
               key={course._id}
               id={`course-${course._id}`}
@@ -92,9 +130,6 @@ const CoursesPage = ({baseURL, loggedIn}) => {
                     </li>
                   ))}
                 </ul>
-                {/* <Link to={`/courses/${course._id}/lessons`} className="text-blue-500 hover:underline">
-                  Go to Lessons
-                </Link> */}
               </div>
 
               {/* Teacher Details */}
@@ -110,14 +145,13 @@ const CoursesPage = ({baseURL, loggedIn}) => {
               {/* Enroll Button */}
               <div className="text-center mb-4">
                 {loggedIn ?
-                  <Link
+                  <button
                     id={course._id}
-                    to={`/StudentDashboard`}
                     className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
                     onClick={(e) => HandleEnroll(e)}
                   >
                   Enroll Now
-                  </Link>:
+                  </button>:
                   <Link
                     to={"/login"}
                       className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
@@ -131,6 +165,7 @@ const CoursesPage = ({baseURL, loggedIn}) => {
         ) : (
           <p className="text-center text-gray-500">No courses available</p>
         )}
+      </div>
       </div>
     </div>
   );
