@@ -27,5 +27,5 @@ function AdmSidebar({ setSelectedPage }) {
       </div>
     );
   }
-  
+
   export default AdmSidebar;
