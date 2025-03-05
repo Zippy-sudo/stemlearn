@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Sidebar from "../components/Sidebar";
+import TeacherSidebar from "../components/TeacherSidebar";
 import TeacherCourses from "../components/TeacherCourses";
 import LessonResources from "../components/LessonResources";
 
@@ -8,7 +8,7 @@ function TeacherDashboard({ baseURL }) {
 
   return (
     <div className="flex">
-      <Sidebar setSelectedPage={setSelectedPage} />
+      <TeacherSidebar setSelectedPage={setSelectedPage} />
 
       <div className="flex-1 p-6">
         {selectedPage === "courses" && <TeacherCourses baseURL={baseURL} />}
