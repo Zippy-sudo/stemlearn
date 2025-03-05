@@ -3,10 +3,10 @@ import { useState, useEffect, useCallback } from "react";
 const LessonResources = ({ lessonId, baseURL }) => {
   const [resources, setResources] = useState([]);
   const [editResource, setEditResource] = useState(null);
-  const [formData, setFormData] = useState({ title: "", file_url: "" });
+  const [formData, setFormData] = useState({ lesson_id: null, title: "", file_url: "" });
 
   const apiRequest = useCallback(async (url, method, body = null) => {
-    const token = sessionStorage.getItem("token");
+    const token = sessionStorage.getItem("Token");
 
     const options = {
       method,
@@ -30,14 +30,22 @@ const LessonResources = ({ lessonId, baseURL }) => {
   // Fetch lesson resources
   const fetchResources = useCallback(async () => {
     try {
-      const response = await apiRequest(`/lessons/${lessonId}/resources`, "GET");
+      const response = await apiRequest(`/courses`, "GET");
+      let rs = []
       if (response) {
-        setResources(response);
+        for (const course of response) {
+            if (course.lessons){
+                for (const lesson of course.lessons) {
+                    rs = [...rs,...lesson.resources]
+                }
+            }
+        }
       }
+      setResources(rs);
     } catch (error) {
       console.error("Error fetching resources:", error);
     }
-  }, [lessonId, apiRequest]);
+  }, [apiRequest]);
 
   useEffect(() => {
     fetchResources();
@@ -50,9 +58,9 @@ const LessonResources = ({ lessonId, baseURL }) => {
   const handleAddResource = async (e) => {
     e.preventDefault();
     try {
-      const newResource = await apiRequest(`/lessons/${lessonId}/resources`, "POST", formData);
+      const newResource = await apiRequest(`/resources`, "POST", formData);
       if (newResource) {
-        setResources([...resources, newResource]);
+        setResources([...resources, newResource.resources]);
         setFormData({ title: "", file_url: "" });
       }
     } catch (error) {
@@ -69,12 +77,12 @@ const LessonResources = ({ lessonId, baseURL }) => {
     e.preventDefault();
     try {
       const updatedResource = await apiRequest(
-        `/lessons/${lessonId}/resources/${editResource.id}`,
+        `/resources/${editResource._id}`,
         "PATCH",
         formData
       );
       if (updatedResource) {
-        setResources(resources.map((res) => (res.id === editResource.id ? updatedResource : res)));
+        setResources(resources.map((res) => (res._id === editResource._id ? updatedResource : res)));
         setEditResource(null);
         setFormData({ title: "", file_url: "" });
       }
@@ -87,7 +95,7 @@ const LessonResources = ({ lessonId, baseURL }) => {
   const handleDeleteResource = async (id) => {
     if (!window.confirm("Are you sure you want to delete this resource?")) return;
     try {
-      const response = await apiRequest(`/lessons/${lessonId}/resources/${id}`, "DELETE");
+      const response = await apiRequest(`/resources/${id}`, "DELETE");
       if (response) {
         setResources(resources.filter((res) => res.id !== id));
       }
@@ -126,7 +134,7 @@ const LessonResources = ({ lessonId, baseURL }) => {
 
       <ul>
         {resources.map((resource) => (
-          <li key={resource.id} className="p-3 bg-white shadow rounded flex justify-between items-center mb-2">
+          <li key={resource._id} className="p-3 bg-white shadow rounded flex justify-between items-center mb-2">
             <div>
               <p className="font-semibold">{resource.title}</p>
               <a href={resource.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-600">
