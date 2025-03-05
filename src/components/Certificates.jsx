@@ -8,7 +8,7 @@ const CertificatesPage = ({ studentId }) => {
     // Fetch certificates from the backend
     const fetchCertificates = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/certificates/${studentId}`);
+        const response = await fetch(`http://127.0.0.1:5555/certificates/${studentId}`);
         const data = await response.json();
         setCertificates(data);
       } catch (error) {
@@ -54,7 +54,7 @@ const CertificatesPage = ({ studentId }) => {
               rel="noopener noreferrer"
               className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
             >
-              View Certificate
+              Your Certificate 
             </a>
           </div>
         ))}
