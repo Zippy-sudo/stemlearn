@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-function LessonsPage (){
+function LessonsPage ({baseURL}){
     const [lessons, setLessons] = useState([]);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5555/lessons", {
+        fetch(`${baseURL}/lessons`, {
             method: "GET",
             headers: {
               "Authorization": `Bearer ${sessionStorage.getItem("Token")}`,
