@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import SignUp from "./components/SignUp";
@@ -16,8 +16,15 @@ import TeacherDashboard from './pages/TeacherDashboard';
 import StudentQuizDashboard from "./pages/StudentQuizDashboard";
 
 function App() {
-  const baseURL = "https://stemlearn-app-db.onrender.com"
+  const baseURL = "http://127.0.0.1:5555"
   const [loggedIn, setLoggedIn] = useState(false)
+  useEffect(() => {
+    if (sessionStorage.getItem("Token")){
+      setLoggedIn(true)
+    }
+  }, [])
+
+  console.log(loggedIn)
 
   return (
     <Router>
