@@ -12,7 +12,12 @@ function TeacherSidebar({ setSelectedPage }) {
             <button onClick={() => setSelectedPage("lesson-resources")} className="block p-2 w-full text-left hover:bg-gray-700">
               Lesson Resources
             </button>
-          </li>
+            </li>
+          <li>
+            <button onClick={() => setSelectedPage("feedback")} className="block p-2 w-full text-left hover:bg-gray-700">
+              Feedback
+            </button>
+            </li>
         </ul>
       </div>
     );
