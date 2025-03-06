@@ -23,6 +23,11 @@ function AdmSidebar({ setSelectedPage }) {
               Student Management
             </button>
           </li>
+          <li>
+            <button onClick={() => setSelectedPage("activity-tracker")} className="block p-2 w-full text-left hover:bg-gray-700">
+              Activity Tracker
+            </button>
+          </li>
         </ul>
       </div>
     );

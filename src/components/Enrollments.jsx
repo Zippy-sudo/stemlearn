@@ -52,12 +52,15 @@ function Enrollments({ baseURL }) {
 
     if (data) {
       console.log("API Response:", data);
-      setEnrollments(data);
+      const enrollmentsArray = Array.isArray(data) ? data : [data];
+      setEnrollments(enrollmentsArray);
+      
       let completions = 0
-      for (const enrollment of enrollments){
-        completions += enrollment.completion_percentage
+      for (const enrollment of enrollmentsArray){
+        completions += enrollment.completion_percentage || 0;
       }
-      setAnalytics({total_students:data.length, average_completion : Math.round(completions/enrollments.length * 100)});
+      const averageCompletion = data.length > 0 ? Math.round(completions / enrollmentsArray.length) : 0;
+      setAnalytics({total_students:enrollmentsArray.length, average_completion : averageCompletion }); {/*Math.round(completions/enrollments.length * 100)}); */}
     }
     setLoading(false);
   }, [baseURL, courseId]);
@@ -96,10 +99,10 @@ function Enrollments({ baseURL }) {
       )}
 
       <ul className="space-y-4">
-        {enrollments.map((enrollment) => (
+        {Array.isArray(enrollments) && enrollments.map((enrollment) => (
           <li key={enrollment._id} className="p-4 border border-gray-200 rounded-lg shadow-md">
-            <p className="text-gray-700 font-medium">Student Name: <span className="text-gray-900">{enrollment.student_name}</span></p>
-            <p className="text-gray-700 font-medium">Course Title: <span className="text-gray-900">{enrollment.course_title}</span></p>
+            <p className="text-gray-700 font-medium">Student Name: <span className="text-gray-900">{enrollment.student.name}</span></p>
+            <p className="text-gray-700 font-medium">Course Title: <span className="text-gray-900">{enrollment.course.title}</span></p>
             <p className="text-gray-700 font-medium">Completion: <span className="text-blue-600">{enrollment.completion_percentage}%</span></p>
           </li>
         ))}
