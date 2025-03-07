@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 async function apiRequest(url, method, body = null) {
   const token = sessionStorage.getItem("Token");
@@ -43,14 +43,11 @@ const ActivityTracker = ({baseURL}) => {
   const [filters, setFilters] = useState({ student: "", date: "", action: "" });
   const isActive = useRef(true);
 
-  // Fetch activities from the backend
-  // Stop API calls when user is inactive
-  // Filter activities based on user selection
-  const fetchActivities = async () => {
+  const fetchActivities = useCallback(async () => {
     if (!isActive.current) return;
 
     try {
-      let url = `${baseURL}/activities`;
+      let url = "/activities";
       const data = await apiRequest(url, "GET");
       if (data) setActivities(data);
     } catch (err) {
@@ -58,7 +55,7 @@ const ActivityTracker = ({baseURL}) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const filteredActivities = activities.filter((activity) => {
     return (
@@ -87,7 +84,8 @@ const ActivityTracker = ({baseURL}) => {
       isActive.current = false;
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [fetchActivities]);
+
 
   if (loading) return <div className="text-center text-lg p-4">Loading activities...</div>;
   if (error) return <div className="text-red-500 text-center p-4">Error: {error}</div>;

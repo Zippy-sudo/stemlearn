@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../QuizPage.css";
+
 const QuizPage = ({ baseURL }) => {
   const { quizId } = useParams();
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null); // Track selected option for the current question
+  const [selectedOption, setSelectedOption] = useState(null);
   const [showReview, setShowReview] = useState(false);
   const [submissionMessage, setSubmissionMessage] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const token = sessionStorage.getItem("Token");
 
@@ -44,11 +46,11 @@ const QuizPage = ({ baseURL }) => {
   }, [quizId, baseURL, token]);
 
   const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value); // Update selected option
+    setSelectedOption(event.target.value);
   };
 
   const handleReviewToggle = () => {
-    setShowReview((prev) => !prev); // Toggle review section visibility
+    setShowReview((prev) => !prev);
   };
 
   const handleSubmit = async () => {
@@ -57,8 +59,15 @@ const QuizPage = ({ baseURL }) => {
       return;
     }
 
+    if (submitted) {
+      setSubmissionMessage("You have already submitted this quiz.");
+      return;
+    }
+
     try {
-      const url = `${baseURL}/quizzes/${quizId}/submit`;
+      setSubmitted(true);
+
+      const url = `${baseURL}/quizzes/${quizId}`;
       console.log("Submitting quiz to:", url);
 
       const response = await fetch(url, {
@@ -67,7 +76,7 @@ const QuizPage = ({ baseURL }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ selectedOption }),
+        body: JSON.stringify({ answer: selectedOption }),
       });
 
       if (!response.ok) {
@@ -77,15 +86,13 @@ const QuizPage = ({ baseURL }) => {
       const result = await response.json();
       console.log("Submission result:", result);
 
-      // Update the quiz state with the new attempts, score, and percentage
       setQuiz((prevQuiz) => ({
         ...prevQuiz,
         attempts: result.attempts,
-        score: result.score,
-        percentage: result.percentage,
+        grade: result.grade,
       }));
 
-      setSubmissionMessage("Quiz submitted successfully!");
+      setSubmissionMessage(result.Success || "Quiz submitted successfully!");
     } catch (err) {
       console.error("Submission error:", err);
       setSubmissionMessage("Submission failed. Please try again.");
@@ -114,6 +121,7 @@ const QuizPage = ({ baseURL }) => {
                     value={option}
                     checked={selectedOption === option}
                     onChange={handleOptionChange}
+                    disabled={submitted}
                   />
                   {option}
                 </label>
@@ -124,13 +132,18 @@ const QuizPage = ({ baseURL }) => {
       </div>
 
       {/* Submit Button */}
-      <button onClick={handleSubmit} style={{ alignSelf: "flex-end" }}>
-        Submit Quiz
+      <button
+        onClick={handleSubmit}
+        disabled={submitted}
+        style={{ alignSelf: "flex-end" }}
+      >
+        {submitted ? "Submitted" : "Submit Quiz"}
       </button>
 
       {/* Submission Message */}
       {submissionMessage && <p>{submissionMessage}</p>}
 
+      {/* Quiz Metadata */}
       <table className="quiz-meta">
         <thead>
           <tr>
@@ -144,8 +157,12 @@ const QuizPage = ({ baseURL }) => {
           <tr>
             <td>{quiz.lesson?.title || "N/A"}</td>
             <td>{quiz.student?.name || "N/A"}</td>
-            <td>{new Date(quiz.created_at).toLocaleDateString()}</td>
-            <td>{quiz.attempts}</td>
+            <td>
+              {quiz.created_at
+                ? new Date(quiz.created_at).toLocaleDateString()
+                : "N/A"}
+            </td>
+            <td>{quiz.attempts ?? 0}</td>
           </tr>
         </tbody>
       </table>
@@ -155,8 +172,8 @@ const QuizPage = ({ baseURL }) => {
         {showReview ? "Hide Review" : "Review Quiz"}
       </button>
 
-      {/* Review Section */}
-      {showReview && (
+      {/* Review Section (Only after submission) */}
+      {showReview && submitted && (
         <div className="quiz-review">
           <h2>Review</h2>
           <p>
@@ -171,11 +188,10 @@ const QuizPage = ({ baseURL }) => {
             {quiz.correct_answer || "Not available"}
           </p>
           <p>
-            <strong>Score:</strong> {quiz.score ?? "Not available"}
+            <strong>Grade:</strong> {quiz.grade ?? "Not available"}
           </p>
           <p>
-            <strong>Total Percentage:</strong>{" "}
-            {quiz.percentage ?? "Not available"}%
+            <strong>Attempts:</strong> {quiz.attempts ?? "Not available"}
           </p>
         </div>
       )}
