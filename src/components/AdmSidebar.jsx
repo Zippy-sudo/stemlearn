@@ -28,6 +28,11 @@ function AdmSidebar({ setSelectedPage }) {
               Activity Tracker
             </button>
           </li>
+          <li>
+            <button onClick={() => setSelectedPage("create-certificate")} className="block p-2 w-full text-left hover:bg-gray-700">
+              Certifications
+            </button>
+          </li>
         </ul>
       </div>
     );
