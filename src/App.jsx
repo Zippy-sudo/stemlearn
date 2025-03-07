@@ -37,6 +37,7 @@ function App() {
         <Route path="/Enroll/:courseId" element={<Enrollment baseURL={baseURL}/>}/>
         <Route path="/teacher-quizpage" element={<StudentQuizDashboard baseURL={baseURL} />}/>
         <Route path="/lessons" element={<LessonsPage baseURL={baseURL} />}/>
+        <Route path="/studentquiz" element={<StudentQuizDashboard baseURL={baseURL} />}/>
       </Routes>
     </Router>
   );

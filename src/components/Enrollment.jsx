@@ -28,7 +28,6 @@ function Enrollment({baseURL}) {
             if (response.ok) {
                 setEnrollmentStatus("Enrollment successful!");
                 navigate("/StudentDashboard")
-               // setTimeout(() => navigate('/my-courses'), 2000);
             } else {
                 setEnrollmentStatus(data.error || "Failed to enroll in the course. Please try again.");
             }

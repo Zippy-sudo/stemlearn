@@ -65,7 +65,7 @@ function LessonsPage ({baseURL}){
                     {/* Quizzes & Assignments Links */}
                     <div className="mt-4 flex space-x-4">
                         <a
-                        href={`/quizzes/${lesson._id}`}
+                        href={`/studentquiz`}
                         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                         >
                         Take Quiz
