@@ -108,7 +108,6 @@ const LessonsPage = ({ baseURL, loggedIn }) => {
                 className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6"
               >
                 <h1 className="text-3xl font-bold text-center">{lesson.title}</h1>
-                <p className="text-center text-gray-600 mb-4">Subject: {lesson.subject}</p>
 
                 {/* Lesson Content */}
                 <div className="mb-4">
