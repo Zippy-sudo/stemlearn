@@ -14,6 +14,7 @@ import Enrollment from './components/Enrollment';
 import TeacherRoute from './components/TeacherRoute';
 import TeacherDashboard from './pages/TeacherDashboard';
 import StudentQuizDashboard from "./pages/StudentQuizDashboard";
+import LessonsPage from "./pages/LessonsPage";
 
 function App() {
   const baseURL = "http://127.0.0.1:5555"
@@ -42,6 +43,7 @@ function App() {
         <Route path="/Mycourses" element ={<MyCourses/>}/>
         <Route path="/Enroll/:courseId" element={<Enrollment baseURL={baseURL}/>}/>
         <Route path="/teacher-quizpage" element={<StudentQuizDashboard baseURL={baseURL} />}/>
+        <Route path="/lessons" element={<LessonsPage baseURL={baseURL} />}/>
       </Routes>
     </Router>
   );

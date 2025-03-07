@@ -34,7 +34,7 @@ const CoursesPage = ({baseURL, loggedIn}) => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      try {
+      try {  
         const response = await fetch(`${baseURL}/unauthCourses`, {
           method: "GET", // Explicitly setting the method
           headers: {
