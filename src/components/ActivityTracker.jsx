@@ -36,7 +36,7 @@ async function apiRequest(url, method, body = null) {
 }
 
 // Track user activity
-const ActivityTracker = () => {
+const ActivityTracker = ({baseURL}) => {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -85,6 +85,7 @@ const ActivityTracker = () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [fetchActivities]);
+
 
   if (loading) return <div className="text-center text-lg p-4">Loading activities...</div>;
   if (error) return <div className="text-red-500 text-center p-4">Error: {error}</div>;

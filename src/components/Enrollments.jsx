@@ -60,7 +60,7 @@ function Enrollments({ baseURL }) {
         completions += enrollment.completion_percentage || 0;
       }
       const averageCompletion = data.length > 0 ? Math.round(completions / enrollmentsArray.length) : 0;
-      setAnalytics({total_students:enrollmentsArray.length, average_completion : averageCompletion }); {/*Math.round(completions/enrollments.length * 100)}); */}
+      setAnalytics({total_students:enrollmentsArray.length, average_completion : averageCompletion }); 
     }
     setLoading(false);
   }, [baseURL, courseId]);

@@ -24,8 +24,9 @@ function SignUp({baseURL}) {
       console.error("Error signing up:", error.message || "Unknown error");
       return;
     }
-    sessionStorage.setItem("Token", response["Token"]);
-    sessionStorage.setItem("Role", response["Role"]);
+    const resp = await response.json();
+    sessionStorage.setItem("Token", resp["Token"]);
+    sessionStorage.setItem("Role", resp["Role"]);
     navigate("/StudentDashboard");} catch (error) {
     console.error("Error signing up");
     }
@@ -37,7 +38,7 @@ function SignUp({baseURL}) {
         {/* Left Side */}
         <div className="w-1/2 bg-cover bg-center flex items-center justify-center p-6" 
              style={{ backgroundImage: `url(${studentdesk})` }}>
-          <h2 className="text-purple text-3xl font-bold relative top-[-40px] left-[-10px]">STEM IT UP!</h2>
+          <h2 className="text-black text-4xl font-bold relative top-[-178px] left-[-98px]">STEM IT UP!</h2>
         </div>
 
         {/* Right Side - Signup Form */}

@@ -5,29 +5,36 @@ const CoursesPage = ({baseURL, loggedIn}) => {
   const [courses, setCourses] = useState([]);
   const [coursesToDisplay, setCoursesToDisplay] = useState([])
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("")
   const [subject, setSubject] = useState('All')
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value)
     if (subject === "All"){
-      let ctd = courses.filter((course) => course.title.toUpperCase().includes(e.target.value.trim().toUpperCase()))
+      let ctd = courses.filter((course) => course.title.trim().toUpperCase().includes(e.target.value.trim().toUpperCase()))
       setCoursesToDisplay(ctd)
       return
     }
-    let ctd = courses.filter((course) => course.title.toUpperCase().includes(e.target.value.trim().toUpperCase()) && course.subject === subject)
+    let ctd = courses.filter((course) => course.title.trim().toUpperCase().includes(e.target.value.trim().toUpperCase()) && course.subject === subject)
     setCoursesToDisplay(ctd)
   };
 
   const handleSubjectChange = (e) => {
     setSubject(e.target.value)
-    let ctd = courses.filter((course) => course.subject === e.target.value)
+    if(e.target.value === "All") {
+      let ctd = courses.filter((course) => course.title.trim().toUpperCase().includes(searchTerm.trim().toUpperCase()))
+      setCoursesToDisplay(ctd)
+      return
+    }
+    let ctd = courses.filter((course) => course.title.trim().includes(searchTerm.trim().toUpperCase()) && course.subject === e.target.value)
     setCoursesToDisplay(ctd)
   }
 
   useEffect(() => {
     const fetchCourses = async () => {
-      try {
+      try {  
         const response = await fetch(`${baseURL}/unauthCourses`, {
           method: "GET", // Explicitly setting the method
           headers: {
@@ -66,14 +73,16 @@ const CoursesPage = ({baseURL, loggedIn}) => {
 
   return (
   <div className="flex flex-col">
-    <div className="mx-auto p-4">
+    <div className="mx-auto p-4 place-content-between">
     {/* Search Here */}
       <input type="text"
       placeholder="Search..."
       onChange={handleSearchChange}
+      className="bg-aliceblue border border-black"
       >
       </input>
       <select value="subject" onChange={handleSubjectChange}>
+        <option value={subject}>{subject}</option>
         <option value="All">All</option>
         <option value="Mathematics">Mathematics</option>
         <option value="Physics">Physics</option>
