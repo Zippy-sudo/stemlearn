@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 
 const LessonsPage = ({ baseURL, loggedIn }) => {
   const [lessons, setLessons] = useState([]);
   const [lessonsToDisplay, setLessonsToDisplay] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
-  // Handle search input change
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
     filterLessons(e.target.value);
   };
-
-  // Handle subject filter change
   
 
   // Filter lessons based on search term and subject
@@ -58,10 +51,6 @@ const LessonsPage = ({ baseURL, loggedIn }) => {
     fetchLessons();
   }, [baseURL]);
 
-  // Handle navigation to a specific lesson
-  const handleLessonClick = (lessonId) => {
-    navigate(`/lesson/${lessonId}`);
-  };
 
   if (loading) return <p className="text-center text-gray-500">Loading lessons...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;

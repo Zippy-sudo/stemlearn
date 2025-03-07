@@ -5,8 +5,8 @@ import "../StudentQuizDashboard.css";
 const StudentQuizDashboard = ({ baseURL }) => {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  let error = ""
 
   const token = sessionStorage.getItem("Token");
 
