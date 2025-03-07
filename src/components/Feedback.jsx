@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const BASE_URL = "http://127.0.0.1:5000";
-
-const AssignmentSubmissionsList = ({ userRole }) => {
+const AssignmentSubmissionsList = ({ baseURL, userRole }) => {
   const [submissions, setSubmissions] = useState([]);
   const [filter, setFilter] = useState('');
   const [selectedSubmission, setSelectedSubmission] = useState(null);
@@ -13,7 +11,7 @@ const AssignmentSubmissionsList = ({ userRole }) => {
     const fetchSubmissions = async () => {
       try {
         const token = sessionStorage.getItem('Token');
-        const response = await fetch(`${BASE_URL}/assignments`, {
+        const response = await fetch(`${baseURL}/assignments`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
@@ -28,7 +26,7 @@ const AssignmentSubmissionsList = ({ userRole }) => {
 
   const handleUpdate = async (submissionId) => {
     try {
-      await fetch(`${BASE_URL}/assignments/${submissionId}`, {
+      await fetch(`${baseURL}/assignments/${submissionId}`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('Token')}`,

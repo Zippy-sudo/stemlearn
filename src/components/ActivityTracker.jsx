@@ -36,7 +36,7 @@ async function apiRequest(url, method, body = null) {
 }
 
 // Track user activity
-const ActivityTracker = () => {
+const ActivityTracker = ({baseURL}) => {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -50,7 +50,7 @@ const ActivityTracker = () => {
     if (!isActive.current) return;
 
     try {
-      let url = "/activities";
+      let url = `${baseURL}/activities`;
       const data = await apiRequest(url, "GET");
       if (data) setActivities(data);
     } catch (err) {

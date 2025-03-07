@@ -4,9 +4,11 @@ export default {
   theme: {
     extend: {
       colors :{
-        "main-yellow": "#FFC107"
-      }
+        "main-yellow": "#FFC107",
+        "aliceblue": '#f0f8ff'
+      },
     },
   },
-  plugins: [],
+  plugins: [
+  ],
 };

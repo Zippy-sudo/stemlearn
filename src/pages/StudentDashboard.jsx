@@ -44,8 +44,8 @@ function StudentDashboard({baseURL}) {
             <button onClick={() => document.getElementById('my-courses-section').scrollIntoView({ behavior: 'smooth' })}>
             </button>
 
-            <div id="my-courses-section">
-                <div className='text-center pt-4 pb-4 bg-main-yellow'>
+            <div id="my-courses-section" className='flex-grow text-center'>
+                <div className='text-center  mt-4 pt-4 pb-4 bg-main-yellow'>
                 <h2 className='text-xl'>My Courses</h2>
                 </div>
                 {enrollments.length > 0 ? (
@@ -62,7 +62,7 @@ function StudentDashboard({baseURL}) {
                         ))}
                     </ul>
                 ) : (
-                    <p>You are not enrolled in any courses yet.</p>
+                    <p>You are not enrolled in any courses.</p>
                 )}
             </div>
         </div>
