@@ -88,7 +88,7 @@ const ActivityTracker = ({baseURL}) => {
       isActive.current = false;
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [baseURL]);
 
   if (loading) return <div className="text-center text-lg p-4">Loading activities...</div>;
   if (error) return <div className="text-red-500 text-center p-4">Error: {error}</div>;
