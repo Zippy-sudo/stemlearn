@@ -108,9 +108,7 @@ const CreateCertificate = ({ baseURL }) => {
       const enrollmentsData = await enrollmentsResponse.json();
       const certificatesData = await certificatesResponse.json();
 
-      // Filters enrollments with 100% completion
-      // to enrollments that already have a 100% completion and have already been certified
-      // they have a tag indicating certified and the option to select it is disabled.
+      // Filter enrollments with 100% completion
       const completedEnrollments = enrollmentsData.filter(
         (enrollment) => enrollment.completion_percentage === 100
       );
@@ -121,6 +119,65 @@ const CreateCertificate = ({ baseURL }) => {
       setMessage("Certificate created successfully!");
       setError("");
       setSelectedEnrollmentId("");
+    } catch (err) {
+      setError(err.message);
+      setMessage("");
+    }
+  };
+
+  // Handle certificate deletion
+  const handleDeleteCertificate = async (enrollmentId) => {
+    try {
+      const token = sessionStorage.getItem("Token");
+
+      const certificate = certificates.find(
+        (cert) => cert.enrollment_id === enrollmentId
+      );
+
+      if (!certificate) {
+        throw new Error("Certificate not found");
+      }
+
+      const response = await fetch(`${baseURL}/certificates/${certificate._id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete certificate");
+      }
+
+      const enrollmentsResponse = await fetch(`${baseURL}/enrollments`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const certificatesResponse = await fetch(`${baseURL}/certificates`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const enrollmentsData = await enrollmentsResponse.json();
+      const certificatesData = await certificatesResponse.json();
+
+      // Filters enrollments with 100% completion
+      // to enrollments that already have a 100% completion and have already been certified
+      // they have a tag indicating certified and the option to select it is disabled.
+      const completedEnrollments = enrollmentsData.filter(
+        (enrollment) => enrollment.completion_percentage === 100
+      );
+
+      setEnrollments(completedEnrollments);
+      setCertificates(certificatesData);
+
+      setMessage("Certificate deleted successfully!");
+      setError("");
     } catch (err) {
       setError(err.message);
       setMessage("");
@@ -165,6 +222,32 @@ const CreateCertificate = ({ baseURL }) => {
           Create Certificate
         </button>
       </form>
+
+      {/* Delete Certificate Button for Certified Enrollments */}
+      <div className="mt-6">
+        <h3 className="text-xl font-bold text-center text-gray-800 mb-4">Delete Certificates</h3>
+        <ul className="space-y-4">
+          {enrollments
+            .filter((enrollment) => isEnrollmentCertified(enrollment._id))
+            .map((enrollment) => (
+              <li key={enrollment._id} className="p-4 border border-gray-200 rounded-lg shadow-sm">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-gray-700 font-medium">
+                      {enrollment.student.name} - {enrollment.course.title}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleDeleteCertificate(enrollment._id)}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition duration-300"
+                  >
+                    Delete Certificate
+                  </button>
+                </div>
+              </li>
+            ))}
+        </ul>
+      </div>
 
       {message && <p className="text-green-500 text-center mt-4">{message}</p>}
     </div>
