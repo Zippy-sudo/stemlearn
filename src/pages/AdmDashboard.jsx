@@ -5,6 +5,7 @@ import Enrollments from "../components/Enrollments";
 import StudentManagement from "../components/StudentManagement";
 import AddTeacherForm from "../components/AddTeacherForm";
 import ActivityTracker from "../components/ActivityTracker";
+import CreateCertificate from "../components/CreateCertificate"
 
 function AdmDashboard({ baseURL }) {
   const [selectedPage, setSelectedPage] = useState("courses");
@@ -18,6 +19,7 @@ function AdmDashboard({ baseURL }) {
       {selectedPage === "enrollments" && <Enrollments baseURL={baseURL} />}
       {selectedPage === "student-management" && <StudentManagement baseURL={baseURL} />}
       {selectedPage === "activity-tracker" && <ActivityTracker baseURL={baseURL} />}
+      {selectedPage === "create-certificate" && <CreateCertificate baseURL={baseURL} />}
     </div>
     </div>
   )
