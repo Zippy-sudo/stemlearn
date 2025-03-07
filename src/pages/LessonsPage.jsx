@@ -162,7 +162,7 @@ const LessonsPage = ({ baseURL, loggedIn }) => {
                     href={`/assignments/${lesson._id}`}
                     className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
                   >
-                    View Assignment
+                    Submit Assignment
                   </a>
                 </div>
               </div>

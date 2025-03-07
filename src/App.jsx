@@ -15,6 +15,7 @@ import TeacherRoute from './components/TeacherRoute';
 import TeacherDashboard from './pages/TeacherDashboard';
 import StudentQuizDashboard from "./pages/StudentQuizDashboard";
 import LessonsPage from "./pages/LessonsPage";
+import AssignmentSubmissionForm from "./components/AssignmentSubmit";
 
 function App() {
   const baseURL = "http://127.0.0.1:5555"
@@ -45,6 +46,7 @@ function App() {
         <Route path="/teacher-quizpage" element={<StudentQuizDashboard baseURL={baseURL} />}/>
         <Route path="/lessons" element={<LessonsPage baseURL={baseURL} />}/>
         <Route path="/studentquiz" element={<StudentQuizDashboard baseURL={baseURL} />}/>
+        <Route path="/assignments/:lessonId" element={<AssignmentSubmissionForm baseURL={baseURL} />}/>
       </Routes>
     </Router>
   );
