@@ -17,7 +17,7 @@ import StudentQuizDashboard from "./pages/StudentQuizDashboard";
 import LessonsPage from "./pages/LessonsPage";
 
 function App() {
-  const baseURL = "http://127.0.0.1:5555"
+  const baseURL = "https://stemlearn-app-db.onrender.com"
   const [loggedIn, setLoggedIn] = useState(false)
   useEffect(() => {
     if (sessionStorage.getItem("Token")){
