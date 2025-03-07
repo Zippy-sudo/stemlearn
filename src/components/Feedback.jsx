@@ -22,7 +22,7 @@ const AssignmentSubmissionsList = ({ baseURL, userRole }) => {
       }
     };
     fetchSubmissions();
-  }, []);
+  }, [baseURL]);
 
   const handleUpdate = async (submissionId) => {
     try {
