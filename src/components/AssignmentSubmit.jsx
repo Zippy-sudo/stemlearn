@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const AssignmentSubmissionPage = ({ baseURL }) => {
-  const { lessonId } = useParams(); // Get lessonId from the URL
+  const lessonId  = useParams(); // Get lessonId from the URL
   const navigate = useNavigate();
   const [submissionText, setSubmissionText] = useState("");
   const [fileUrl, setFileUrl] = useState("");
@@ -13,7 +13,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
 
   // Fetch submission details (if editing)
   useEffect(() => {
-    console.log(lessonId)
+    console.log(lessonId.lessonsId)
     const fetchSubmission = async () => {
       try {
         const token = sessionStorage.getItem("Token"); // Example
@@ -51,7 +51,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
     const token = sessionStorage.getItem("Token"); // Example
 
     const submissionData = {
-      lesson_id: lessonId,
+      lesson_id: lessonId.lessonsId,
       submission_text: submissionText,
       file_url: fileUrl,
     };
@@ -78,7 +78,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
       setSubmission(data); // Update the submission state with the response
       setSuccess("Assignment submitted successfully!");
       setTimeout(() => {
-        navigate('/lessons'); // Redirect to the lessons page
+        navigate('/Courses'); // Redirect to the lessons page
       }, 1000);
       setError(""); // Clear any previous errors
     } catch (err) {
