@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login({setLoggedIn, baseURL}) {
+function Login({ setLoggedIn, baseURL }) {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,12 +42,11 @@ function Login({setLoggedIn, baseURL}) {
 
       if (data.Role === "ADMIN") {
         navigate("/AdmDashboard");
-      } else if (data.Role === "STUDENT"){
+      } else if (data.Role === "STUDENT") {
         navigate("/StudentDashboard");
       } else {
-        navigate("/TeacherDashboard")
+        navigate("/TeacherDashboard");
       }
-      
     } catch (err) {
       setError("Failed to connect to server.");
       setLoading(false);
@@ -57,9 +56,15 @@ function Login({setLoggedIn, baseURL}) {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-700">Sign In</h2>
-        {error && <p className="p-2 text-red-600 bg-red-100 border border-red-500 rounded">{error}</p>}
-        
+        <h2 className="text-2xl font-bold text-center text-gray-700">
+          Sign In
+        </h2>
+        {error && (
+          <p className="p-2 text-red-600 bg-red-100 border border-red-500 rounded">
+            {error}
+          </p>
+        )}
+
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-gray-700">Email</label>
@@ -73,7 +78,7 @@ function Login({setLoggedIn, baseURL}) {
               required
             />
           </div>
-          
+
           <div>
             <label className="block text-gray-700">Password</label>
             <input
@@ -86,7 +91,7 @@ function Login({setLoggedIn, baseURL}) {
               required
             />
           </div>
-          
+
           <button
             type="submit"
             className="w-full px-4 py-2 text-white bg-purple-700 rounded-lg hover:bg-blue-600"
@@ -95,10 +100,13 @@ function Login({setLoggedIn, baseURL}) {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-        
+
         <p className="text-center text-gray-600">
           Don't have an account?{" "}
-          <button onClick={() => navigate("/signup")} className="text-purple-500 hover:underline">
+          <button
+            onClick={() => navigate("/signup")}
+            className="text-purple-500 hover:underline"
+          >
             Sign up
           </button>
         </p>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import "../QuizPage.css";
 
 const QuizPage = ({ baseURL }) => {
   const { quizId } = useParams();
@@ -18,30 +17,20 @@ const QuizPage = ({ baseURL }) => {
     const fetchQuiz = async () => {
       try {
         if (!quizId) throw new Error("Invalid quiz ID");
-
         const url = `${baseURL}/quizzes/${quizId}`;
-        console.log("Fetching quiz from:", url);
-
         const response = await fetch(url, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
-        if (!response.ok) {
+        if (!response.ok)
           throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
         const data = await response.json();
-        console.log("Quiz data:", data);
-
         setQuiz(data);
       } catch (err) {
-        console.error("Fetch error:", err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchQuiz();
   }, [quizId, baseURL, token]);
 
@@ -58,18 +47,13 @@ const QuizPage = ({ baseURL }) => {
       setSubmissionMessage("Please select an option before submitting.");
       return;
     }
-
     if (submitted) {
       setSubmissionMessage("You have already submitted this quiz.");
       return;
     }
-
     try {
       setSubmitted(true);
-
       const url = `${baseURL}/quizzes/${quizId}`;
-      console.log("Submitting quiz to:", url);
-
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -78,104 +62,73 @@ const QuizPage = ({ baseURL }) => {
         },
         body: JSON.stringify({ answer: selectedOption }),
       });
-
-      if (!response.ok) {
+      if (!response.ok)
         throw new Error(`Failed to submit. Status: ${response.status}`);
-      }
-
       const result = await response.json();
-      console.log("Submission result:", result);
-
       setQuiz((prevQuiz) => ({
         ...prevQuiz,
-        attempts: result.attempts,
-        grade: result.grade,
+        correct_answer: result.correct_answer || prevQuiz.correct_answer,
+        grade: result.grade ?? prevQuiz.grade,
+        attempts: result.attempts ?? prevQuiz.attempts,
       }));
-
       setSubmissionMessage(result.Success || "Quiz submitted successfully!");
     } catch (err) {
-      console.error("Submission error:", err);
       setSubmissionMessage("Submission failed. Please try again.");
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!quiz) return <p>No quiz data found.</p>;
+  if (loading) return <p className="text-center text-gray-500">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
+  if (!quiz)
+    return <p className="text-center text-gray-500">No quiz data found.</p>;
 
   return (
-    <div className="quiz-page">
-      <h1>Quiz Platform</h1>
-
-      {/* Quiz Questions */}
-      <div className="quiz-questions">
-        <p>{quiz.question || "No question available"}</p>
+    <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
+      <h1 className="text-2xl font-bold text-center mb-4">Quiz Platform</h1>
+      <div className="mb-4">
+        <p className="text-lg font-medium">
+          {quiz.question || "No question available"}
+        </p>
         {quiz.options && (
-          <ul>
+          <ul className="space-y-2 mt-2">
             {quiz.options.map((option, index) => (
-              <li key={index}>
-                <label>
-                  <input
-                    type="radio"
-                    name="quiz-option"
-                    value={option}
-                    checked={selectedOption === option}
-                    onChange={handleOptionChange}
-                    disabled={submitted}
-                  />
-                  {option}
-                </label>
+              <li key={index} className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="quiz-option"
+                  value={option}
+                  checked={selectedOption === option}
+                  onChange={handleOptionChange}
+                  disabled={submitted}
+                  className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <label className="text-gray-700">{option}</label>
               </li>
             ))}
           </ul>
         )}
       </div>
-
-      {/* Submit Button */}
       <button
         onClick={handleSubmit}
         disabled={submitted}
-        style={{ alignSelf: "flex-end" }}
+        className={`w-full mt-4 py-2 rounded-lg text-white font-bold ${
+          submitted ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+        }`}
       >
         {submitted ? "Submitted" : "Submit Quiz"}
       </button>
-
-      {/* Submission Message */}
-      {submissionMessage && <p>{submissionMessage}</p>}
-
-      {/* Quiz Metadata */}
-      <table className="quiz-meta">
-        <thead>
-          <tr>
-            <th>Lesson</th>
-            <th>Student</th>
-            <th>Created At</th>
-            <th>Attempts</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{quiz.lesson?.title || "N/A"}</td>
-            <td>{quiz.student?.name || "N/A"}</td>
-            <td>
-              {quiz.created_at
-                ? new Date(quiz.created_at).toLocaleDateString()
-                : "N/A"}
-            </td>
-            <td>{quiz.attempts ?? 0}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      {/* Review Button */}
-      <button onClick={handleReviewToggle}>
+      {submissionMessage && (
+        <p className="mt-2 text-center text-green-600">{submissionMessage}</p>
+      )}
+      <button
+        onClick={handleReviewToggle}
+        className="w-full mt-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+      >
         {showReview ? "Hide Review" : "Review Quiz"}
       </button>
-
-      {/* Review Section (Only after submission) */}
       {showReview && submitted && (
-        <div className="quiz-review">
-          <h2>Review</h2>
+        <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+          <h2 className="text-lg font-bold">Review</h2>
           <p>
             <strong>Question:</strong>{" "}
             {quiz.question || "No question available"}
@@ -188,7 +141,8 @@ const QuizPage = ({ baseURL }) => {
             {quiz.correct_answer || "Not available"}
           </p>
           <p>
-            <strong>Grade:</strong> {quiz.grade ?? "Not available"}
+            <strong>Grade:</strong>{" "}
+            {quiz.grade ? `${quiz.grade * 100}%` : "Not available"}
           </p>
           <p>
             <strong>Attempts:</strong> {quiz.attempts ?? "Not available"}

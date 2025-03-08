@@ -3,6 +3,7 @@ import TeacherSidebar from "../components/TeacherSidebar";
 import TeacherCourses from "../components/TeacherCourses";
 import LessonResources from "../components/LessonResources";
 import Feedback from "../components/Feedback";
+import Teacherquiz from "./TeacherQuizzesDashboard";
 
 function TeacherDashboard({ baseURL }) {
   const [selectedPage, setSelectedPage] = useState("courses");
@@ -13,8 +14,11 @@ function TeacherDashboard({ baseURL }) {
 
       <div className="flex-1 p-6">
         {selectedPage === "courses" && <TeacherCourses baseURL={baseURL} />}
-        {selectedPage === "lesson-resources" && <LessonResources baseURL={baseURL} />}
+        {selectedPage === "lesson-resources" && (
+          <LessonResources baseURL={baseURL} />
+        )}
         {selectedPage === "feedback" && <Feedback baseURL={baseURL} />}
+        {selectedPage === "Teacherquiz" && <Teacherquiz baseURL={baseURL} />}
       </div>
     </div>
   );
