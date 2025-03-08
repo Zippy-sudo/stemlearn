@@ -18,7 +18,7 @@ import StudentCertificates from "./components/StudentCertificates"
 import QuizPage from "./components/QuizPage";
 
 function App() {
-  const baseURL = "http://localhost:3000";
+  const baseURL = "https://stemlearn-app-db.onrender.com";
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     if (sessionStorage.getItem("Token")) {
