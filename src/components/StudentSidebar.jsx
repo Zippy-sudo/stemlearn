@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaHome, FaBook, FaChartBar, FaCommentDots } from "react-icons/fa";
+import { FaHome, FaBook, FaChartBar, FaCommentDots, FaCertificate } from "react-icons/fa";
 import profile from "../images/profile.png";
 
 function StudentSidebar({ studentName }) {
@@ -50,6 +50,14 @@ function StudentSidebar({ studentName }) {
                 className="flex items-center px-6 py-3 w-full hover:bg-gray-700 transition"
               >
                 <FaCommentDots className="mr-3" /> Feedback
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/StudentCertificates"
+                className="flex items-center px-6 py-3 w-full hover:bg-gray-700 transition"
+              >
+                <FaCertificate className="mr-3" /> Certifications
               </Link>
             </li>
           </ul>
