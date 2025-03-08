@@ -13,6 +13,7 @@ import Enrollment from "./components/Enrollment";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import StudentQuizDashboard from "./pages/StudentQuizDashboard";
 import LessonsPage from "./pages/LessonsPage";
+import StudentCertificates from "./components/StudentCertificates"
 import AssignmentSubmissionForm from "./components/AssignmentSubmit";
 
 import QuizPage from "./components/QuizPage";
@@ -81,6 +82,10 @@ function App() {
         <Route
           path="/studentquiz"
           element={<StudentQuizDashboard baseURL={baseURL} />}
+        />
+        <Route
+          path="/StudentCertificates"
+          element={<StudentCertificates baseURL={baseURL} />}
         />
 
         <Route path="/quiz/:quizId" element={<QuizPage baseURL={baseURL} />} />
