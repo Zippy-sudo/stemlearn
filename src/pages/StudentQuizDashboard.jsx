@@ -6,7 +6,7 @@ const StudentQuizDashboard = ({ baseURL }) => {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  let error = ""
+  let error = "";
 
   const token = sessionStorage.getItem("Token");
 
@@ -62,10 +62,10 @@ const StudentQuizDashboard = ({ baseURL }) => {
         <table>
           <thead>
             <tr>
-              <th>Quiz</th>
+              <th>Lesson</th>
               <th>Course</th>
-              <th>Created At</th>
-              <th>Status</th>
+              <th>due_date</th>
+              <th>Attempts</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -74,7 +74,7 @@ const StudentQuizDashboard = ({ baseURL }) => {
               <tr key={index}>
                 <td>{quiz.lesson.title}</td>
                 <td>{quiz.lesson.course.title}</td>
-                <td>{new Date(quiz.created_at).toLocaleDateString()}</td>
+                <td>{quiz.due_date}</td>
                 <td>{quiz.attempts}</td>
                 <td>
                   <button onClick={() => handleStartQuiz(quiz._id)}>
