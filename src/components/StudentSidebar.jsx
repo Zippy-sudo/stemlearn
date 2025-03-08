@@ -46,14 +46,6 @@ function StudentSidebar({ studentName }) {
             </li>
             <li>
               <Link
-                to="/feedback"
-                className="flex items-center px-6 py-3 w-full hover:bg-gray-700 transition"
-              >
-                <FaCommentDots className="mr-3" /> Feedback
-              </Link>
-            </li>
-            <li>
-              <Link
                 to="/StudentCertificates"
                 className="flex items-center px-6 py-3 w-full hover:bg-gray-700 transition"
               >

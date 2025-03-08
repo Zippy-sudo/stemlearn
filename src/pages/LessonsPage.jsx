@@ -10,6 +10,7 @@ const LessonsPage = ({ baseURL }) => {
   const navigate = useNavigate();
   const { courseId } = useParams(); // Get the courseId from the URL
 
+  const [courseTitle, setCourseTitle] = useState("Loading...")
 
   const handleSearchChange = (e) => {
     filterLessons(e.target.value);
@@ -48,6 +49,7 @@ const LessonsPage = ({ baseURL }) => {
         }
 
         const data = await response.json();
+        setCourseTitle(data[0].course.title) 
         setLessons(data);
 
         // Filter lessons by courseId if it exists in the URL
@@ -67,12 +69,6 @@ const LessonsPage = ({ baseURL }) => {
     fetchLessons();
   }, [baseURL, courseId]); // Add courseId to dependency array
 
-
-  // Handle navigation to a specific lesson
-  const handleLessonClick = (lessonId) => {
-    navigate(`/lessons/${lessonId}`);
-  };
-
   if (loading) return <p className="text-center text-gray-500">Loading lessons...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
@@ -88,6 +84,10 @@ const LessonsPage = ({ baseURL }) => {
         />
       </div>
 
+      <div>
+      <p className="text-center text-5xl">{courseTitle}</p>
+      </div>
+
       {/* Sidebar and Main Content */}
       <div className="flex">
         {/* Sidebar */}
@@ -96,12 +96,12 @@ const LessonsPage = ({ baseURL }) => {
           <ul>
             {lessonsToDisplay.map((lesson) => (
               <li key={lesson._id} className="mb-2">
-                <button
-                  onClick={() => handleLessonClick(lesson._id)}
+                <a
+                  href={`#lessons-${lesson._id}`}
                   className="block w-full p-2 bg-blue-100 hover:bg-blue-200 rounded-md text-left"
                 >
                   {lesson.title}
-                </button>
+                </a>
               </li>
             ))}
           </ul>
@@ -120,7 +120,7 @@ const LessonsPage = ({ baseURL }) => {
 
                 {/* Lesson Content */}
                 <div className="mb-4">
-                  <h2 className="text-lg font-semibold">Content</h2>
+                  {/* <h2 className="text-lg font-semibold">Content</h2> */}
                   <p className="text-gray-700">{lesson.content}</p>
                 </div>
 

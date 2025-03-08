@@ -21,12 +21,14 @@ function SignUp({baseURL}) {
     });
     if (!response.ok) {
       const error = await response.json();
+      alert("Signup Failed")
       console.error("Error signing up:", error.message || "Unknown error");
       return;
     }
     const resp = await response.json();
     sessionStorage.setItem("Token", resp["Token"]);
     sessionStorage.setItem("Role", resp["Role"]);
+    alert("Signup Successful")
     navigate("/StudentDashboard");} catch (error) {
     console.error("Error signing up");
     }

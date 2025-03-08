@@ -9,7 +9,6 @@ import AdmDashboard from "./pages/AdmDashboard";
 import CoursesPage from "./pages/Coursepage";
 import StudentDashboard from "./pages/StudentDashboard";
 import MyCourses from "./components/MyCourses";
-import Enrollment from "./components/Enrollment";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import StudentQuizDashboard from "./pages/StudentQuizDashboard";
 import LessonsPage from "./pages/LessonsPage";
@@ -22,15 +21,13 @@ import TeacherQuizzesDashboard from "./pages/TeacherQuizzesDashboard";
 import CreateQuiz from "./pages/CreateQuiz";
 
 function App() {
-  const baseURL = "https://stemlearn-app-db.onrender.com";
+  const baseURL = "http://127.0.0.1:5555";
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     if (sessionStorage.getItem("Token")) {
       setLoggedIn(true);
     }
   }, []);
-
-  console.log(loggedIn);
 
   return (
     <Router>
@@ -68,11 +65,6 @@ function App() {
         <Route
           path="/StudentDashboard"
           element={<StudentDashboard baseURL={baseURL} />}
-        />
-        <Route path="/Mycourses" element={<MyCourses />} />
-        <Route
-          path="/Enroll/:courseId"
-          element={<Enrollment baseURL={baseURL} />}
         />
         <Route
           path="/teacher-quizpage"

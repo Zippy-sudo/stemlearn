@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const CoursesPage = ({baseURL, loggedIn}) => {
@@ -8,6 +8,7 @@ const CoursesPage = ({baseURL, loggedIn}) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [subject, setSubject] = useState('All')
   const [error, setError] = useState(null);
+  const token = sessionStorage.getItem('Token');
   const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
@@ -62,10 +63,31 @@ const CoursesPage = ({baseURL, loggedIn}) => {
   }, [baseURL]);
   
 
-  function HandleEnroll(e) {
-    navigate(`/Enroll/${e.target.id}`)
+const HandleEnroll = useCallback(async (e) => {
+  try {
+    const response = await fetch(`${baseURL}/enrollments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        },
+      credentials: 'include',
+      body: JSON.stringify({
+      course_id: e.target.id,
+      }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+    alert("Enrollment successful!");
+    navigate("/StudentDashboard")
+    } else {
+    alert(data.error || "Failed to enroll in the course. Please try again.");
+    }
+  } catch (error) {
+    console.error("Enrollment Error:", error);
+    alert("An error occurred. Please check your connection and try again.");
   }
-
+}, [token, baseURL, navigate]);
 
 
   if (loading) return <p className="text-center text-gray-500">Loading courses...</p>;
@@ -81,14 +103,14 @@ const CoursesPage = ({baseURL, loggedIn}) => {
       className="bg-aliceblue border border-black"
       >
       </input>
-      <select value="subject" onChange={handleSubjectChange}>
+      <select onChange={handleSubjectChange}>
         <option value={subject}>{subject}</option>
-        <option value="All">All</option>
-        <option value="Mathematics">Mathematics</option>
-        <option value="Physics">Physics</option>
-        <option value="Biology">Biology</option>
-        <option value="Computer Science">Computer Science</option>
-        <option value="Engineering">Engineering</option>
+        { subject === "All" ?  null : <option value="All">All</option>}
+        { subject === "Mathematics" ? null : <option value="Mathematics">Mathematics</option>}
+        { subject === "Physics" ? null : <option value="Physics">Physics</option>}
+        { subject === "Biology" ? null : <option value="Biology">Biology</option>}
+        { subject === "Computer Science" ? null : <option value="Computer Science">Computer Science</option>}
+        { subject === "Engineering" ? null : <option value="Engineering">Engineering</option>}
       </select>
       </div>
 
@@ -139,14 +161,7 @@ const CoursesPage = ({baseURL, loggedIn}) => {
                   
                   ))}
                 </ul>
-                {/* Add a "Start Lessons" button */}
-                <Link to={`/lessons/${course._id}`}>
-                  <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                    Start Lessons
-                  </button>
-                </Link>
               </div>
-
               {/* Teacher Details */}
               {course.teacher ? 
               <div className="mb-4">

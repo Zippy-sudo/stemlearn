@@ -163,7 +163,11 @@ const StudentCertificates = ({ baseURL }) => {
         },
       });
 
-      if (!certificatesResponse.ok) {
+      if(certificatesResponse.status === 404){
+        setError("You Have no certificates.")
+      }
+      else if (!certificatesResponse.ok) {
+        setError("Failed to load certificates. Please try again later.");
         throw new Error("Failed to fetch certificates");
       }
 
@@ -186,7 +190,6 @@ const StudentCertificates = ({ baseURL }) => {
       
       setCertificates(processedCertificates);
     } catch (err) {
-      setError("Failed to load certificates. Please try again later.");
       console.error("Error loading data:", err);
     } finally {
       setLoading(false);

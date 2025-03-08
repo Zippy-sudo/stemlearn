@@ -8,7 +8,7 @@ function Navbar({loggedIn, setLoggedIn}) {
   function handleLogout() {
     sessionStorage.removeItem("Token")
     sessionStorage.removeItem("Role")
-    setLoggedIn(!loggedIn)
+    setLoggedIn(false)
   }
 
   return (
@@ -16,8 +16,6 @@ function Navbar({loggedIn, setLoggedIn}) {
       <div className="navbar-container">
         
         <div className="logo">STEMLearn</div>
-
-        
         <ul className="navbar-list">
           <li><Link to="/">Home</Link></li>
           {whoami === "STUDENT" ? 

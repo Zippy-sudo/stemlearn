@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import StudentSidebar from '../components/StudentSidebar';
 
 function StudentDashboard({baseURL}) {
@@ -58,6 +59,11 @@ function StudentDashboard({baseURL}) {
                                 <p><strong>Duration:</strong> {enrollment.course.duration} Years</p>
                                 <p><strong>Enrolled On:</strong> {enrollment.enrolled_on}</p>
                                 <p><strong>Completion:</strong> {(enrollment.progresses).length > 0 ? `${Math.round((enrollment.progresses).length/(enrollment.course.lessons).length) * 100} %`  : "0%"}</p>
+                                <Link to={`/lessons/${enrollment.course._id}`}>
+                                <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                Start Lessons
+                                </button>
+                                </Link>
                             </li>
                         ))}
                     </ul>
