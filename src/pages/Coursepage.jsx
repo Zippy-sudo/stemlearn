@@ -136,8 +136,15 @@ const CoursesPage = ({baseURL, loggedIn}) => {
                     <li key={index} className="text-gray-700 font-medium">
                       {lesson.title}
                     </li>
+                  
                   ))}
                 </ul>
+                {/* Add a "Start Lessons" button */}
+                <Link to={`/lessons/${course._id}`}>
+                  <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                    Start Lessons
+                  </button>
+                </Link>
               </div>
 
               {/* Teacher Details */}
