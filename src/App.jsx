@@ -18,7 +18,7 @@ import AssignmentSubmissionForm from "./components/AssignmentSubmit";
 import QuizPage from "./components/QuizPage";
 
 function App() {
-  const baseURL = "https://stemlearn-app-db.onrender.com";
+  const baseURL = "http://127.0.0.1:5555";
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     if (sessionStorage.getItem("Token")) {
