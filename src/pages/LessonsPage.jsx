@@ -1,24 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-const LessonsPage = ({ baseURL, loggedIn }) => {
+
+const LessonsPage = ({ baseURL }) => {
   const [lessons, setLessons] = useState([]);
   const [lessonsToDisplay, setLessonsToDisplay] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const { courseId } = useParams(); // Get the courseId from the URL
+
 
   const handleSearchChange = (e) => {
     filterLessons(e.target.value);
   };
+
   
 
   // Filter lessons based on search term and subject
+
+  // Filter lessons based on search term
   const filterLessons = (searchTerm) => {
     let filtered = lessons.filter((lesson) =>
       lesson.title.trim().toUpperCase().includes(searchTerm.trim().toUpperCase())
     );
-
-   
-
+    // Apply courseId filter if it exists
+    if (courseId) {
+      filtered = filtered.filter((lesson) => lesson.course_id === parseInt(courseId));
+    }
     setLessonsToDisplay(filtered);
   };
 
@@ -40,7 +49,14 @@ const LessonsPage = ({ baseURL, loggedIn }) => {
 
         const data = await response.json();
         setLessons(data);
-        setLessonsToDisplay(data); // Initialize lessonsToDisplay
+
+        // Filter lessons by courseId if it exists in the URL
+        if (courseId) {
+          const filteredByCourse = data.filter((lesson) => lesson.course_id === parseInt(courseId));
+          setLessonsToDisplay(filteredByCourse);
+        } else {
+          setLessonsToDisplay(data); // Initialize lessonsToDisplay
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -49,8 +65,13 @@ const LessonsPage = ({ baseURL, loggedIn }) => {
     };
 
     fetchLessons();
-  }, [baseURL]);
+  }, [baseURL, courseId]); // Add courseId to dependency array
 
+
+  // Handle navigation to a specific lesson
+  const handleLessonClick = (lessonId) => {
+    navigate(`/lessons/${lessonId}`);
+  };
 
   if (loading) return <p className="text-center text-gray-500">Loading lessons...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
@@ -65,7 +86,6 @@ const LessonsPage = ({ baseURL, loggedIn }) => {
           onChange={handleSearchChange}
           className="bg-aliceblue border border-black"
         />
-        
       </div>
 
       {/* Sidebar and Main Content */}
@@ -74,14 +94,14 @@ const LessonsPage = ({ baseURL, loggedIn }) => {
         <aside className="w-1/4 bg-gray-100 p-4 h-screen overflow-y-auto border-r">
           <h2 className="text-lg font-semibold mb-3">Lessons</h2>
           <ul>
-            {lessons.map((lesson) => (
+            {lessonsToDisplay.map((lesson) => (
               <li key={lesson._id} className="mb-2">
-                <a
-                  href={`#lesson-${lesson._id}`}
-                  className="block p-2 bg-blue-100 hover:bg-blue-200 rounded-md"
+                <button
+                  onClick={() => handleLessonClick(lesson._id)}
+                  className="block w-full p-2 bg-blue-100 hover:bg-blue-200 rounded-md text-left"
                 >
                   {lesson.title}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
@@ -93,7 +113,7 @@ const LessonsPage = ({ baseURL, loggedIn }) => {
             lessonsToDisplay.map((lesson) => (
               <div
                 key={lesson._id}
-                id={`lesson-${lesson._id}`}
+                id={`lessons-${lesson._id}`}
                 className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6"
               >
                 <h1 className="text-3xl font-bold text-center">{lesson.title}</h1>
@@ -139,10 +159,10 @@ const LessonsPage = ({ baseURL, loggedIn }) => {
                   </div>
                 )}
 
-                {/* Quizzes & Assignments Links (Preserved from your original code) */}
+                {/* Quizzes & Assignments Links */}
                 <div className="mt-4 flex space-x-4">
                   <a
-                    href={`/studentquiz`}
+                    href={`/studentquiz/`}
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                   >
                     Take Quiz
