@@ -14,11 +14,15 @@ import TeacherDashboard from "./pages/TeacherDashboard";
 import StudentQuizDashboard from "./pages/StudentQuizDashboard";
 import LessonsPage from "./pages/LessonsPage";
 import StudentCertificates from "./components/StudentCertificates"
+import AssignmentSubmissionForm from "./components/AssignmentSubmit";
 
 import QuizPage from "./components/QuizPage";
 
+import TeacherQuizzesDashboard from "./pages/TeacherQuizzesDashboard";
+import CreateQuiz from "./pages/CreateQuiz";
+
 function App() {
-  const baseURL = "https://stemlearn-app-db.onrender.com";
+  const baseURL = "http://127.0.0.1:5555";
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     if (sessionStorage.getItem("Token")) {
@@ -32,10 +36,7 @@ function App() {
     <Router>
       <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
       <Routes>
-        <Route
-          path="/"
-          element={<Homepage loggedIn={loggedIn} baseURL={baseURL} />}
-        />
+        <Route path="/" element={<Homepage loggedIn={loggedIn} baseURL={baseURL} />}/>
         <Route
           path="/Signup"
           element={<SignUp setLoggedIn={setLoggedIn} baseURL={baseURL} />}
@@ -77,7 +78,7 @@ function App() {
           path="/teacher-quizpage"
           element={<StudentQuizDashboard baseURL={baseURL} />}
         />
-        <Route path="/lessons" element={<LessonsPage baseURL={baseURL} />} />
+        <Route path="/lessons/:courseId" element={<LessonsPage baseURL={baseURL} />} />
         <Route
           path="/studentquiz"
           element={<StudentQuizDashboard baseURL={baseURL} />}
@@ -88,6 +89,13 @@ function App() {
         />
 
         <Route path="/quiz/:quizId" element={<QuizPage baseURL={baseURL} />} />
+        <Route
+          path="/Teacherquiz"
+          element={<TeacherQuizzesDashboard baseURL={baseURL} />}
+        />
+        <Route path="/create-quiz" element={<CreateQuiz baseURL={baseURL} />} />
+
+        <Route path="/assignments/:lessonsId" element={<AssignmentSubmissionForm baseURL={baseURL} />} />
       </Routes>
     </Router>
   );
