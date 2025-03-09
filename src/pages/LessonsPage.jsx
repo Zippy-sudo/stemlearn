@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 
 const LessonsPage = ({ baseURL }) => {
@@ -7,7 +7,6 @@ const LessonsPage = ({ baseURL }) => {
   const [lessonsToDisplay, setLessonsToDisplay] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
   const { courseId } = useParams(); // Get the courseId from the URL
 
   const [courseTitle, setCourseTitle] = useState("Loading...")
@@ -162,7 +161,7 @@ const LessonsPage = ({ baseURL }) => {
                 {/* Quizzes & Assignments Links */}
                 <div className="mt-4 flex space-x-4">
                   <a
-                    href={`/studentquiz/`}
+                    href={`/studentquiz`}
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                   >
                     Take Quiz

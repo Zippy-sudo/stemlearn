@@ -27,12 +27,7 @@ function Navbar({loggedIn, setLoggedIn}) {
           :null
           }
           <li><Link to="/courses">Courses</Link></li>
-          { whoami === "STUDENT" ?
-          <>
-          <li><Link to="/StudentDashboard">Feedback</Link></li>
-          <li><Link to="/lessons">Lessons</Link></li>
-          </>
-          : whoami === "TEACHER" ?
+          {whoami === "TEACHER" ?
           <li><Link to="/teacher/dashboard">Feedback</Link></li>
           : null}
         </ul>

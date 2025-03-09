@@ -19,7 +19,6 @@ const StudentQuizDashboard = ({ baseURL }) => {
           },
         });
 
-        console.log("Fetching quizzes from:", `${baseURL}/quizzes`);
         if (!response.ok) {
           throw new Error("Failed to fetch quizzes");
         }
@@ -37,7 +36,6 @@ const StudentQuizDashboard = ({ baseURL }) => {
   }, [token, baseURL]);
 
   const handleStartQuiz = (quizId) => {
-    console.log("Starting quiz with ID:", quizId);
     if (!quizId) {
       console.error("Quiz ID is undefined!");
       return;
@@ -66,6 +64,7 @@ const StudentQuizDashboard = ({ baseURL }) => {
               <th>Course</th>
               <th>due_date</th>
               <th>Attempts</th>
+              <th>Top Score</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -75,12 +74,17 @@ const StudentQuizDashboard = ({ baseURL }) => {
                 <td>{quiz.lesson.title}</td>
                 <td>{quiz.lesson.course.title}</td>
                 <td>{quiz.due_date}</td>
-                <td>{quiz.attempts}</td>
+                <td>{quiz.quiz_attempts.length}</td>
+                <td>{quiz.quiz_attempts.length > 0 ? quiz.quiz_attempts.sort((a, b) => b.grade - a.grade)[0]['grade']: 0}</td>
                 <td>
+                  {quiz.quiz_attempts.length !== 3 ? 
                   <button onClick={() => handleStartQuiz(quiz._id)}>
                     {" "}
                     Start Quiz
                   </button>
+                  :
+                  <p>You're out of attempts</p>
+                }
                 </td>
               </tr>
             ))}

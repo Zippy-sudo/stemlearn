@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate} from "react-router-dom";
 
 const QuizPage = ({ baseURL }) => {
   const { quizId } = useParams();
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [showReview, setShowReview] = useState(false);
+  // const [showReview, setShowReview] = useState(false);
   const [submissionMessage, setSubmissionMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const token = sessionStorage.getItem("Token");
+  const navigate = useNavigate() 
+  let choiceMap = new Map()
+  let answers = []
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -35,16 +37,21 @@ const QuizPage = ({ baseURL }) => {
   }, [quizId, baseURL, token]);
 
   const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
+    choiceMap.set(event.target.name, event.target.value)
   };
 
-  const handleReviewToggle = () => {
-    setShowReview((prev) => !prev);
-  };
+  // const handleReviewToggle = () => {
+  //   setShowReview((prev) => !prev);
+  // };
 
   const handleSubmit = async () => {
-    if (!selectedOption) {
-      setSubmissionMessage("Please select an option before submitting.");
+    let total = 0 
+    for(const question of quiz.questions){
+      answers.push(question.correct_answer)
+    }
+    if (choiceMap.size < quiz.questions.length) {
+      alert("Please answer all questions before submitting.");
+      window.location.reload()
       return;
     }
     if (submitted) {
@@ -52,15 +59,20 @@ const QuizPage = ({ baseURL }) => {
       return;
     }
     try {
+      answers.forEach((answer, index) => {
+        if (choiceMap.get(`question ${index + 1} option`) === answer){
+          total += 1
+        }
+      })
       setSubmitted(true);
-      const url = `${baseURL}/quizzes/${quizId}`;
+      const url = `${baseURL}/quizzattempts`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ answer: selectedOption }),
+        body: JSON.stringify({ quiz_id: quizId ,grade: total }),
       });
       if (!response.ok)
         throw new Error(`Failed to submit. Status: ${response.status}`);
@@ -73,8 +85,9 @@ const QuizPage = ({ baseURL }) => {
       }));
       setSubmissionMessage(result.Success || "Quiz submitted successfully!");
     } catch (err) {
-      setSubmissionMessage("Submission failed. Please try again.");
+      alert("Submission failed. Please try again.");
     }
+    navigate('/studentquiz')
   };
 
   if (loading) return <p className="text-center text-gray-500">Loading...</p>;
@@ -84,29 +97,62 @@ const QuizPage = ({ baseURL }) => {
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
-      <h1 className="text-2xl font-bold text-center mb-4">Quiz Platform</h1>
+      <h1 className="text-2xl font-bold text-center mb-4">{quiz.lesson.title} Quiz</h1>
       <div className="mb-4">
+        {quiz.questions.map((question) => {
+          return <>
         <p className="text-lg font-medium">
-          {quiz.question || "No question available"}
+          {question.question}
         </p>
-        {quiz.options && (
-          <ul className="space-y-2 mt-2">
-            {quiz.options.map((option, index) => (
-              <li key={index} className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="quiz-option"
-                  value={option}
-                  checked={selectedOption === option}
-                  onChange={handleOptionChange}
-                  disabled={submitted}
-                  className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-                />
-                <label className="text-gray-700">{option}</label>
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul className="space-y-2 mt-2">
+          <li className="flex items-center space-x-2">
+            <input
+              type="radio"
+              name={`question ${question._id} option`}
+              value={question.option1}
+              onChange={handleOptionChange}
+              disabled={submitted}
+              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+            />
+            <label className="text-gray-700">{question.option1}</label>
+          </li>
+          <li  className="flex items-center space-x-2">
+            <input
+              type="radio"
+              name={`question ${question._id} option`}
+              value={question.option2}
+              onChange={handleOptionChange}
+              disabled={submitted}
+              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+            />
+            <label className="text-gray-700">{question.option2}</label>
+          </li>
+          <li  className="flex items-center space-x-2">
+            <input
+              type="radio"
+              name={`question ${question._id} option`}
+              value={question.option3}
+              onChange={handleOptionChange}
+              disabled={submitted}
+              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+            />
+            <label className="text-gray-700">{question.option3}</label>
+          </li>
+          <li  className="flex items-center space-x-2">
+            <input
+              type="radio"
+              name={`question ${question._id} option`}
+              value={question.option4}
+              onChange={handleOptionChange}
+              disabled={submitted}
+              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+            />
+            <label className="text-gray-700">{question.option4}</label>
+          </li>
+        </ul>
+        </>
+        })
+        }
       </div>
       <button
         onClick={handleSubmit}
@@ -120,7 +166,7 @@ const QuizPage = ({ baseURL }) => {
       {submissionMessage && (
         <p className="mt-2 text-center text-green-600">{submissionMessage}</p>
       )}
-      <button
+      {/* <button
         onClick={handleReviewToggle}
         className="w-full mt-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
       >
@@ -148,7 +194,7 @@ const QuizPage = ({ baseURL }) => {
             <strong>Attempts:</strong> {quiz.attempts ?? "Not available"}
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
