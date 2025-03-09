@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaHome, FaBook, FaChartBar, FaCommentDots, FaCertificate } from "react-icons/fa";
+import { FaHome, FaBook, FaChartBar, FaCertificate } from "react-icons/fa";
 import profile from "../images/profile.png";
 
 function StudentSidebar({ studentName }) {
