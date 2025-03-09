@@ -8,7 +8,6 @@ import Navbar from "./components/Navbar";
 import AdmDashboard from "./pages/AdmDashboard";
 import CoursesPage from "./pages/Coursepage";
 import StudentDashboard from "./pages/StudentDashboard";
-import MyCourses from "./components/MyCourses";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import StudentQuizDashboard from "./pages/StudentQuizDashboard";
 import LessonsPage from "./pages/LessonsPage";
