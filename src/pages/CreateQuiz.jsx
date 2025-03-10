@@ -144,9 +144,12 @@ const CreateQuiz = ({ baseURL }) => {
       // Map questions to match the backend model
       const quizData = {
         lesson_id: lessonId,
-        student_id: studentId,
+
         question: questions[0].text, // Assuming only one question for simplicity
-        options: questions[0].options, // Assuming only one question for simplicity
+        option1: "",
+        option2: "",
+        option3: "",
+        option4: "", // Assuming only one question for simplicity
         correct_answer: questions[0].correct_answer, // Assuming only one question for simplicity
         attempts: 0, // Default value
         grade: 0, // Default value
