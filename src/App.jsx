@@ -21,7 +21,7 @@ import TeacherQuizzesDashboard from "./pages/TeacherQuizzesDashboard";
 import CreateQuiz from "./pages/CreateQuiz";
 
 function App() {
-  const baseURL = "https://stemlearn-db.onrender.com";
+  const baseURL = "http://127.0.0.1:5555";
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     if (sessionStorage.getItem("Token")) {

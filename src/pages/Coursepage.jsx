@@ -144,8 +144,9 @@ const HandleEnroll = useCallback(async (e) => {
             <div
               key={course._id}
               id={`course-${course._id}`}
-              className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6"
+              className="flex flex-col items-center bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6"
             >
+              <div className="flex w-1/2 m-5">
                 {course.subject === "Mathematics" ?
                 <img src={math} alt="math" title="Math"/>:
                 course.subject === "Physics" ?
@@ -158,18 +159,19 @@ const HandleEnroll = useCallback(async (e) => {
                 <img src={engineering} alt="engineering" title="Engineering"/>:
                 <img src={science} alt="generic science" title="Generic"/>
                 }
+              </div>
               <h1 className="text-3xl font-bold text-center">{course.title}</h1>
               <p className="text-center text-gray-600 mb-4">Duration: {course.duration} Years</p>
 
               {/* Course Overview */}
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold">Overview</h2>
+              <div className="mb-4 w-64">
+                <h2 className="text-lg font-semibold text-center">Overview</h2>
                 <p className="text-gray-700">{course.description}</p>
               </div>
 
               {/* Lessons List */}
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold">Lessons</h2>
+              <div className="mb-4 ">
+                <h2 className="text-lg font-semibold text-center">Lessons</h2>
                 <ul className="list-disc list-inside">
                   {course.lessons?.map((lesson, index) => (
                     <li key={index} className="text-gray-700 font-medium">
@@ -182,7 +184,7 @@ const HandleEnroll = useCallback(async (e) => {
               {/* Teacher Details */}
               {course.teacher ? 
               <div className="mb-4">
-                <h2 className="text-lg font-semibold">Teacher</h2>
+                <h2 className="text-lg font-semibold text-center">Teacher</h2>
                 <ul className="list-disc list-inside">
                 <li className="font-semibold">
                   {course.teacher.name}

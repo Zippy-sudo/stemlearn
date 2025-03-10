@@ -108,7 +108,7 @@ function TeacherCourses({ baseURL }) {
 
   return (
     <div>
-      <h2>Your Courses</h2>
+      <h2 className="text-center">Your Courses</h2>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {courses.length === 0 ? (

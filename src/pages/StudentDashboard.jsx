@@ -58,7 +58,8 @@ function StudentDashboard({baseURL}) {
                 {enrollments.length > 0 ? (
                     <ul>
                         {enrollments.map((enrollment) => (
-                            <div className='bg-white m-2'>
+                            <div className=' flex flex-col bg-white m-2 items-center justify-center'>
+                            <div className='h-[250px] w-[500px]'>
                             {enrollment.course.subject === "Mathematics" ?
                             <img src={math} alt="math" title="Math"/>:
                              enrollment.course.subject === "Physics" ?
@@ -71,6 +72,8 @@ function StudentDashboard({baseURL}) {
                             <img src={engineering} alt="engineering" title="Engineering"/>:
                             <img src={science} alt="generic science" title="Generic"/>
                         }
+                        </div>
+                        <div className='w-[250px]'>
                             <li key={enrollment._id}>
                                 <h3>{enrollment.course.title}</h3>
                                 <p>{enrollment.course.description}</p>
@@ -84,6 +87,7 @@ function StudentDashboard({baseURL}) {
                                 </button>
                                 </Link>
                             </li>
+                            </div>
                             </div>
                         ))}
                     </ul>
