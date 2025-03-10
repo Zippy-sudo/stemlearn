@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 
 const LessonsPage = ({ baseURL }) => {
@@ -160,18 +160,18 @@ const LessonsPage = ({ baseURL }) => {
 
                 {/* Quizzes & Assignments Links */}
                 <div className="mt-4 flex space-x-4">
-                  <a
-                    href={`/studentquiz`}
+                  <Link
+                    to={`/studentquiz`}
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                   >
                     Take Quiz
-                  </a>
-                  <a
-                    href={`/assignments/${lesson._id}`}
+                  </Link>
+                  <Link
+                    to={`/assignments/${lesson._id}`}
                     className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
                   >
                     Submit Assignment
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))
