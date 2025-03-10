@@ -12,8 +12,12 @@ const CreateCertificate = ({ baseURL }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setError("");
       try {
         const token = sessionStorage.getItem("Token");
+        if (!token) {
+          throw new Error("Authentication token not found");
+        }
 
         // Fetch enrollments
         const enrollmentsResponse = await fetch(`${baseURL}/enrollments`, {
@@ -24,33 +28,48 @@ const CreateCertificate = ({ baseURL }) => {
         });
 
         if (!enrollmentsResponse.ok) {
-          throw new Error("Failed to fetch enrollments");
+          throw new Error(`Failed to fetch enrollments: ${enrollmentsResponse.status}`);
         }
 
         const enrollmentsData = await enrollmentsResponse.json();
-
-        // Fetch certificates
-        const certificatesResponse = await fetch(`${baseURL}/certificates`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!certificatesResponse.ok) {
-          throw new Error("Failed to fetch certificates");
-        }
-
-        const certificatesData = await certificatesResponse.json();
-
+        
         // Filter enrollments with 100% completion
         const completedEnrollments = enrollmentsData.filter(
           (enrollment) => enrollment.completion_percentage === 100
         );
         setEnrollments(completedEnrollments);
-        setCertificates(certificatesData);
+
+        // Fetch certificates
+        try {
+          const certificatesResponse = await fetch(`${baseURL}/certificates`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          // Handle successful response
+          if (certificatesResponse.ok) {
+            const certificatesData = await certificatesResponse.json();
+            setCertificates(Array.isArray(certificatesData) ? certificatesData : []);
+          } 
+          //  handling for 404 - backend returns 404 when no certificates exist
+          else if (certificatesResponse.status === 404) {
+            setCertificates([]);
+            console.log("No certificates in database");
+          } 
+          else {
+            throw new Error(`Failed to fetch certificates: ${certificatesResponse.status}`);
+          }
+        } catch (certErr) {
+          console.error("Certificate fetch error:", certErr);
+          setCertificates([]);
+        }
       } catch (err) {
-        setError(err.message);
+        console.error("General fetch error:", err);
+        setError(`Error: ${err.message}`);
+        setEnrollments([]);
+        setCertificates([]);
       } finally {
         setLoading(false);
       }
@@ -61,7 +80,7 @@ const CreateCertificate = ({ baseURL }) => {
 
   // Check if an enrollment already has a certificate
   const isEnrollmentCertified = (enrollmentId) => {
-    return certificates.some(
+    return Array.isArray(certificates) && certificates.some(
       (certificate) => certificate.enrollment_id === enrollmentId
     );
   };
@@ -69,6 +88,8 @@ const CreateCertificate = ({ baseURL }) => {
   // Handle certificate creation
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setMessage("");
 
     if (!selectedEnrollmentId) {
       setError("Please select an enrollment");
@@ -76,7 +97,12 @@ const CreateCertificate = ({ baseURL }) => {
     }
 
     try {
+      setLoading(true);
       const token = sessionStorage.getItem("Token");
+      if (!token) {
+        throw new Error("Authentication token not found");
+      }
+
       const response = await fetch(`${baseURL}/certificates`, {
         method: "POST",
         headers: {
@@ -88,47 +114,36 @@ const CreateCertificate = ({ baseURL }) => {
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.Error || "Failed to create certificate");
+        throw new Error(data.Error || `Failed to create certificate: ${response.status}`);
       }
 
-      const enrollmentsResponse = await fetch(`${baseURL}/enrollments`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await refreshData(token);
 
-      const certificatesResponse = await fetch(`${baseURL}/certificates`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const enrollmentsData = await enrollmentsResponse.json();
-      const certificatesData = await certificatesResponse.json();
-
-      // Filter enrollments with 100% completion
-      const completedEnrollments = enrollmentsData.filter(
-        (enrollment) => enrollment.completion_percentage === 100
-      );
-
-      setEnrollments(completedEnrollments);
-      setCertificates(certificatesData);
-
-      setMessage("Certificate created successfully!");
-      setError("");
+      setMessage(data.Success || "Certificate created successfully!");
       setSelectedEnrollmentId("");
     } catch (err) {
-      setError(err.message);
-      setMessage("");
+      console.error("Create certificate error:", err);
+      setError(`Error creating certificate: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Handle certificate deletion
   const handleDeleteCertificate = async (enrollmentId) => {
+    setError("");
+    setMessage("");
+
     try {
+      setLoading(true);
       const token = sessionStorage.getItem("Token");
+      if (!token) {
+        throw new Error("Authentication token not found");
+      }
+
+      if (!Array.isArray(certificates)) {
+        throw new Error("Certificates data is not available");
+      }
 
       const certificate = certificates.find(
         (cert) => cert.enrollment_id === enrollmentId
@@ -146,9 +161,26 @@ const CreateCertificate = ({ baseURL }) => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete certificate");
+        const errorData = await response.json();
+        throw new Error(errorData.Error || `Failed to delete certificate: ${response.status}`);
       }
 
+      const data = await response.json().catch(() => ({ Success: "Certificate deleted successfully" }));
+
+      await refreshData(token);
+
+      setMessage(data.Success || "Certificate deleted successfully!");
+    } catch (err) {
+      console.error("Delete certificate error:", err);
+      setError(`Error deleting certificate: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshData = async (token) => {
+    try {
+      // Fetch enrollments
       const enrollmentsResponse = await fetch(`${baseURL}/enrollments`, {
         method: "GET",
         headers: {
@@ -156,6 +188,15 @@ const CreateCertificate = ({ baseURL }) => {
         },
       });
 
+      if (enrollmentsResponse.ok) {
+        const enrollmentsData = await enrollmentsResponse.json();
+        const completedEnrollments = enrollmentsData.filter(
+          (enrollment) => enrollment.completion_percentage === 100
+        );
+        setEnrollments(completedEnrollments);
+      }
+
+      // Fetch certificates, handling 404 as empty array
       const certificatesResponse = await fetch(`${baseURL}/certificates`, {
         method: "GET",
         headers: {
@@ -163,24 +204,14 @@ const CreateCertificate = ({ baseURL }) => {
         },
       });
 
-      const enrollmentsData = await enrollmentsResponse.json();
-      const certificatesData = await certificatesResponse.json();
-
-      // Filters enrollments with 100% completion
-      // to enrollments that already have a 100% completion and have already been certified
-      // they have a tag indicating certified and the option to select it is disabled.
-      const completedEnrollments = enrollmentsData.filter(
-        (enrollment) => enrollment.completion_percentage === 100
-      );
-
-      setEnrollments(completedEnrollments);
-      setCertificates(certificatesData);
-
-      setMessage("Certificate deleted successfully!");
-      setError("");
+      if (certificatesResponse.ok) {
+        const certificatesData = await certificatesResponse.json();
+        setCertificates(Array.isArray(certificatesData) ? certificatesData : []);
+      } else if (certificatesResponse.status === 404) {
+        setCertificates([]);
+      }
     } catch (err) {
-      setError(err.message);
-      setMessage("");
+      console.error("Refresh data error:", err);
     }
   };
 
@@ -188,9 +219,11 @@ const CreateCertificate = ({ baseURL }) => {
     <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">AWARD CERTIFICATIONS</h2>
       
-      {loading && <p className="text-gray-600 text-center mb-4">Loading enrollments...</p>}
+      {loading && <p className="text-gray-600 text-center mb-4">Loading...</p>}
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+      {message && <p className="text-green-500 text-center mb-4">{message}</p>}
 
+      {/* Certificate Creation Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <select
@@ -201,55 +234,62 @@ const CreateCertificate = ({ baseURL }) => {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select an enrollment</option>
-            {enrollments.map((enrollment) => (
-              <option
-                key={enrollment._id}
-                value={enrollment._id}
-                disabled={isEnrollmentCertified(enrollment._id)}
-              >
-                {enrollment.student.name} - {enrollment.course.title} (
-                {enrollment.completion_percentage}%)
-                {isEnrollmentCertified(enrollment._id) && " (Certified)"}
-              </option>
-            ))}
+            {enrollments.length > 0 ? (
+              enrollments.map((enrollment) => (
+                <option
+                  key={enrollment._id}
+                  value={enrollment._id}
+                  disabled={isEnrollmentCertified(enrollment._id)}
+                >
+                  {enrollment.student.name} - {enrollment.course.title} (
+                  {enrollment.completion_percentage}%)
+                  {isEnrollmentCertified(enrollment._id) && " (Certified)"}
+                </option>
+              ))
+            ) : (
+              <option disabled>No completed enrollments found</option>
+            )}
           </select>
         </div>
         <button 
           type="submit" 
-          disabled={loading || isEnrollmentCertified(selectedEnrollmentId)}
+          disabled={loading || isEnrollmentCertified(selectedEnrollmentId) || !selectedEnrollmentId}
           className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Create Certificate
         </button>
       </form>
 
-      {/* Delete Certificate Button for Certified Enrollments */}
+      {/* Certificate Deletion Section */}
       <div className="mt-6">
         <h3 className="text-xl font-bold text-center text-gray-800 mb-4">Delete Certificates</h3>
-        <ul className="space-y-4">
-          {enrollments
-            .filter((enrollment) => isEnrollmentCertified(enrollment._id))
-            .map((enrollment) => (
-              <li key={enrollment._id} className="p-4 border border-gray-200 rounded-lg shadow-sm">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-gray-700 font-medium">
-                      {enrollment.student.name} - {enrollment.course.title}
-                    </p>
+        {Array.isArray(certificates) && certificates.length > 0 ? (
+          <ul className="space-y-4">
+            {enrollments
+              .filter((enrollment) => isEnrollmentCertified(enrollment._id))
+              .map((enrollment) => (
+                <li key={enrollment._id} className="p-4 border border-gray-200 rounded-lg shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-gray-700 font-medium">
+                        {enrollment.student.name} - {enrollment.course.title}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteCertificate(enrollment._id)}
+                      disabled={loading}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition duration-300 disabled:opacity-50"
+                    >
+                      Delete Certificate
+                    </button>
                   </div>
-                  <button
-                    onClick={() => handleDeleteCertificate(enrollment._id)}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition duration-300"
-                  >
-                    Delete Certificate
-                  </button>
-                </div>
-              </li>
-            ))}
-        </ul>
+                </li>
+              ))}
+          </ul>
+        ) : (
+          <p className="text-gray-500 text-center">No certificates found</p>
+        )}
       </div>
-
-      {message && <p className="text-green-500 text-center mt-4">{message}</p>}
     </div>
   );
 };

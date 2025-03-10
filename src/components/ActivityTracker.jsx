@@ -36,19 +36,21 @@ async function apiRequest(url, method, body = null) {
 }
 
 // Track user activity
-const ActivityTracker = ({baseURL}) => {
+const ActivityTracker = ({ baseURL }) => {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({ student: "", date: "", action: "" });
+  const [clearingLogs, setClearingLogs] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const isActive = useRef(true);
 
   const fetchActivities = useCallback(async () => {
     if (!isActive.current) return;
 
     try {
-      let url = "/activities";
-      const data = await apiRequest(`${baseURL}/${url}`, "GET");
+      let url = `${baseURL}/activities`;
+      const data = await apiRequest(url, "GET");
       if (data) setActivities(data);
     } catch (err) {
       setError(err.message || "Failed to fetch activities.");
@@ -56,6 +58,29 @@ const ActivityTracker = ({baseURL}) => {
       setLoading(false);
     }
   }, [baseURL]);
+
+  const handleClearButtonClick = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmClear = async (confirmed) => {
+    setShowConfirmDialog(false);
+    
+    if (!confirmed) return;
+    
+    setClearingLogs(true);
+    try {
+      const response = await apiRequest(`${baseURL}/activities`, "DELETE");
+      if (response && response.Success) {
+        alert("Activity logs cleared successfully!");
+        setActivities([]);
+      }
+    } catch (err) {
+      setError(err.message || "Failed to clear activity logs.");
+    } finally {
+      setClearingLogs(false);
+    }
+  };
 
   const filteredActivities = activities.filter((activity) => {
     return (
@@ -92,7 +117,40 @@ const ActivityTracker = ({baseURL}) => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-800">Activity Tracker</h2>
+      {/* confirmation to clear logs */}
+      {showConfirmDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4">Confirm Clear Logs</h3>
+            <p className="mb-6">Are you sure you want to clear all activity logs? This action cannot be undone.</p>
+            <div className="flex justify-end space-x-4">
+              <button 
+                onClick={() => handleConfirmClear(false)} 
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => handleConfirmClear(true)} 
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              >
+                Clear Logs
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold text-gray-800">Activity Tracker</h2>
+        <button 
+          onClick={handleClearButtonClick}
+          disabled={clearingLogs || activities.length === 0}
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {clearingLogs ? "Clearing..." : "Clear All Logs"}
+        </button>
+      </div>
 
       {/* Filtering by date/name/activity */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -124,7 +182,7 @@ const ActivityTracker = ({baseURL}) => {
           <table className="w-full border-collapse border border-gray-200">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border p-3 text-left">User</th>
+                <th className="border p-3 text-left">Student</th>
                 <th className="border p-3 text-left">Action</th>
                 <th className="border p-3 text-left">Timestamp</th>
               </tr>
