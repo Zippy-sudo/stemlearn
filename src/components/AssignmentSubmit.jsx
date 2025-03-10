@@ -13,7 +13,6 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
 
   // Fetch submission details (if editing)
   useEffect(() => {
-    console.log(lessonId.lessonsId)
     const fetchSubmission = async () => {
       try {
         const token = sessionStorage.getItem("Token"); // Example

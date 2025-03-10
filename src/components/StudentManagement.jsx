@@ -35,7 +35,7 @@ async function apiRequest(url, method, body = null) {
   }
 }
 
-function EnrollmentForm() {
+function EnrollmentForm({baseURL}) {
   const [students, setStudents] = useState([]);
   const [courses, setCourses] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
@@ -45,9 +45,9 @@ function EnrollmentForm() {
 
   useEffect(() => {
     async function fetchData() {
-      const studentData = await apiRequest("/users", "GET");
-      const courseData = await apiRequest("/courses", "GET");
-      const enrollmentData = await apiRequest("/enrollments", "GET");
+      const studentData = await apiRequest(`${baseURL}/users`, "GET");
+      const courseData = await apiRequest(`${baseURL}/courses`, "GET");
+      const enrollmentData = await apiRequest(`${baseURL}/enrollments`, "GET");
 
       if (studentData) setStudents(studentData);
       if (courseData) setCourses(courseData);
@@ -67,7 +67,7 @@ function EnrollmentForm() {
       }
     }
     fetchData();
-  }, []);
+  }, [baseURL]);
 
   // Handles enrollment Submission
   const handleSubmit = async (e) => {

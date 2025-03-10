@@ -48,14 +48,14 @@ const ActivityTracker = ({baseURL}) => {
 
     try {
       let url = "/activities";
-      const data = await apiRequest(url, "GET");
+      const data = await apiRequest(`${baseURL}/${url}`, "GET");
       if (data) setActivities(data);
     } catch (err) {
       setError(err.message || "Failed to fetch activities.");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [baseURL]);
 
   const filteredActivities = activities.filter((activity) => {
     return (
