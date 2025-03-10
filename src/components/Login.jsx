@@ -41,7 +41,7 @@ function Login({ setLoggedIn, baseURL }) {
       setLoggedIn(true);
 
       if (data.Role === "ADMIN") {
-        navigate("/AdmDashboard");
+        navigate("/admin/dashboard");
       } else if (data.Role === "STUDENT") {
         navigate("/StudentDashboard");
       } else {
