@@ -124,7 +124,7 @@ const ActivityTracker = ({baseURL}) => {
           <table className="w-full border-collapse border border-gray-200">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border p-3 text-left">Student</th>
+                <th className="border p-3 text-left">User</th>
                 <th className="border p-3 text-left">Action</th>
                 <th className="border p-3 text-left">Timestamp</th>
               </tr>
