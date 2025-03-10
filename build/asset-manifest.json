@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.7e209e2d.css",
+    "main.js": "/static/js/main.515b497c.js",
+    "static/js/213.7849b372.chunk.js": "/static/js/213.7849b372.chunk.js",
+    "static/js/732.197ecf08.chunk.js": "/static/js/732.197ecf08.chunk.js",
+    "static/js/453.4c238ccd.chunk.js": "/static/js/453.4c238ccd.chunk.js",
+    "static/media/Engineering.png": "/static/media/Engineering.1a4d71948e0092510568.png",
+    "static/media/Herosection.webp": "/static/media/Herosection.598f6426aadf0c2d8736.webp",
+    "static/media/student_desk.png": "/static/media/student_desk.efd92864514342ae00d8.png",
+    "static/media/Biology.jpg": "/static/media/Biology.b7ad587cb38bc6726c5d.jpg",
+    "static/media/Science.jpg": "/static/media/Science.0b04b4c1aac2addffa80.jpg",
+    "static/media/Physics.jpg": "/static/media/Physics.57005a923f6167f0756b.jpg",
+    "static/media/CompSci.jpeg": "/static/media/CompSci.8b12e040da89efe9e964.jpeg",
+    "static/media/Math.jpg": "/static/media/Math.0f4dc3349c6bd982680d.jpg",
+    "static/media/profile.png": "/static/media/profile.66173e82a1cb539c50da.png",
+    "index.html": "/index.html",
+    "main.7e209e2d.css.map": "/static/css/main.7e209e2d.css.map",
+    "main.515b497c.js.map": "/static/js/main.515b497c.js.map",
+    "213.7849b372.chunk.js.map": "/static/js/213.7849b372.chunk.js.map",
+    "732.197ecf08.chunk.js.map": "/static/js/732.197ecf08.chunk.js.map",
+    "453.4c238ccd.chunk.js.map": "/static/js/453.4c238ccd.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7e209e2d.css",
+    "static/js/main.515b497c.js"
+  ]
+}
