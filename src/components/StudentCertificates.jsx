@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { usePDF } from 'react-to-pdf';
+import biology from "../images/Biology.jpg"
+import compsci from "../images/CompSci.jpeg"
+import engineering from "../images/Engineering.png"
+import math from "../images/Math.jpg"
+import physics from "../images/Physics.jpg"
+import science from "../images/Science.jpg"
 
 // Certificate Template Component
 // Fetches the certificate, displays the date in a readable format
@@ -83,7 +89,21 @@ const ErrorMessage = ({ message }) => (
 
 // Certificate Card Component. It displays a certificate with a download button
 const CertificateCard = ({ certificate, onDownload }) => (
-  <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+  <div className=" flex p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-mdvtransition-shadow">
+      <div className='bg-white m-2 h-32 w-42 rounded-lg'>
+                            {certificate.enrollment.course.subject === "Mathematics" ?
+                            <img src={math} alt="math" title="Math" className="w-full h-full object-fill rounded-lg"/>:
+                            certificate.enrollment.course.subject === "Physics" ?
+                            <img src={physics} alt="physics" title="Physics" className="w-full h-full object-fill rounded-lg"/>:
+                            certificate.enrollment.course.subject === "Biology" ?
+                            <img src={biology} alt="biology" title="Biology" className="w-full h-full object-fill rounded-lg"/>:
+                            certificate.enrollment.course.subject === "Computer Science" ? 
+                            <img src={compsci} alt="computer science" title="Computer Science" className="w-full h-full object-fill rounded-lg"/>:
+                            certificate.enrollment.course.subject === "Engineering" ?
+                            <img src={engineering} alt="engineering" title="Engineering" className="w-full h-full object-fill rounded-lg"/>:
+                            <img src={science} alt="generic science" title="Generic" className="w-full h-full object-fill rounded-lg"/>
+                        }
+      </div>
     <div className="flex justify-between items-center flex-wrap gap-4">
       <div>
         <h3 className="text-lg font-bold text-gray-900">{certificate.enrollment.course.title}</h3>
@@ -100,10 +120,11 @@ const CertificateCard = ({ certificate, onDownload }) => (
           </span>
         </p>
       </div>
-      <div className="flex gap-2">
+    </div>
+    <div className="flex gap-2">
         <button
           onClick={() => onDownload(certificate)}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition duration-300 flex items-center gap-2"
+          className="px-4 py-2 bg-white text-black font-medium rounded-md transition duration-300 flex items-center gap-2"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -111,7 +132,6 @@ const CertificateCard = ({ certificate, onDownload }) => (
           Download
         </button>
       </div>
-    </div>
   </div>
 );
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function MyCourses(){
+function MyCourses({baseURL}){
 
     const [courses, setCourses] = useState([]);
     const token = sessionStorage.getItem('Token'); // Assuming the token is stored in localStorage
@@ -9,7 +9,7 @@ function MyCourses(){
         // Fetch enrolled courses
         async function fetchMyCourses() {
             try {
-                const response = await fetch('http://127.0.0.1:5555/courses', {
+                const response = await fetch(`${baseURL}/courses`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },

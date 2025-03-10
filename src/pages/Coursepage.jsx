@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import biology from "../images/Biology.jpg"
+import compsci from "../images/CompSci.jpeg"
+import engineering from "../images/Engineering.png"
+import math from "../images/Math.jpg"
+import physics from "../images/Physics.jpg"
+import science from "../images/Science.jpg"
 
 const CoursesPage = ({baseURL, loggedIn}) => {
   const [courses, setCourses] = useState([]);
@@ -140,6 +146,18 @@ const HandleEnroll = useCallback(async (e) => {
               id={`course-${course._id}`}
               className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6"
             >
+                {course.subject === "Mathematics" ?
+                <img src={math} alt="math" title="Math"/>:
+                course.subject === "Physics" ?
+                <img src={physics} alt="physics" title="Physics"/>:
+                course.subject === "Biology" ?
+                <img src={biology} alt="biology" title="Biology"/>:
+                course.subject === "Computer Science" ? 
+                <img src={compsci} alt="computer science" title="Computer Science"/>:
+                course.subject === "Engineering" ?
+                <img src={engineering} alt="engineering" title="Engineering"/>:
+                <img src={science} alt="generic science" title="Generic"/>
+                }
               <h1 className="text-3xl font-bold text-center">{course.title}</h1>
               <p className="text-center text-gray-600 mb-4">Duration: {course.duration} Years</p>
 
@@ -165,9 +183,11 @@ const HandleEnroll = useCallback(async (e) => {
               {course.teacher ? 
               <div className="mb-4">
                 <h2 className="text-lg font-semibold">Teacher</h2>
-                <p className="font-semibold">
-                  Teacher: {course.teacher.name}
-                </p>
+                <ul className="list-disc list-inside">
+                <li className="font-semibold">
+                  {course.teacher.name}
+                </li>
+                </ul>
               </div>:
               null}
 

@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import StudentSidebar from '../components/StudentSidebar';
+import biology from "../images/Biology.jpg"
+import compsci from "../images/CompSci.jpeg"
+import engineering from "../images/Engineering.png"
+import math from "../images/Math.jpg"
+import physics from "../images/Physics.jpg"
+import science from "../images/Science.jpg"
 
 function StudentDashboard({baseURL}) {
     const [enrollments, setEnrollments] = useState([]);
@@ -41,7 +47,7 @@ function StudentDashboard({baseURL}) {
 
     return (
         <div className='flex'>
-            <StudentSidebar studentName={studentName}/>
+            <StudentSidebar studentName={studentName} baseURL={baseURL}/>
             <button onClick={() => document.getElementById('my-courses-section').scrollIntoView({ behavior: 'smooth' })}>
             </button>
 
@@ -52,19 +58,33 @@ function StudentDashboard({baseURL}) {
                 {enrollments.length > 0 ? (
                     <ul>
                         {enrollments.map((enrollment) => (
+                            <div className='bg-white m-2'>
+                            {enrollment.course.subject === "Mathematics" ?
+                            <img src={math} alt="math" title="Math"/>:
+                             enrollment.course.subject === "Physics" ?
+                            <img src={physics} alt="physics" title="Physics"/>:
+                             enrollment.course.subject === "Biology" ?
+                            <img src={biology} alt="biology" title="Biology"/>:
+                             enrollment.course.subject === "Computer Science" ? 
+                            <img src={compsci} alt="computer science" title="Computer Science"/>:
+                             enrollment.course.subject === "Engineering" ?
+                            <img src={engineering} alt="engineering" title="Engineering"/>:
+                            <img src={science} alt="generic science" title="Generic"/>
+                        }
                             <li key={enrollment._id}>
                                 <h3>{enrollment.course.title}</h3>
                                 <p>{enrollment.course.description}</p>
                                 <p><strong>Subject:</strong> {enrollment.course.subject}</p>
                                 <p><strong>Duration:</strong> {enrollment.course.duration} Years</p>
                                 <p><strong>Enrolled On:</strong> {enrollment.enrolled_on}</p>
-                                <p><strong>Completion:</strong> {(enrollment.progresses).length > 0 ? `${Math.round((enrollment.progresses).length/(enrollment.course.lessons).length) * 100} %`  : "0%"}</p>
+                                <p><strong>Completion:</strong> {enrollment.progresses.length > 0 ? `${Math.round((enrollment.progresses.length/enrollment.course.lessons.length) * 100)} %`  : "0%"}</p>
                                 <Link to={`/lessons/${enrollment.course._id}`}>
                                 <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                                 Start Lessons
                                 </button>
                                 </Link>
                             </li>
+                            </div>
                         ))}
                     </ul>
                 ) : (

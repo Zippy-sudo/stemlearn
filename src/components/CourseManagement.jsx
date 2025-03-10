@@ -135,7 +135,7 @@ function CourseManagement({ baseURL }) {
         />
         <input
           type="number"
-          placeholder="Duration (hours)"
+          placeholder="Duration (years)"
           value={newCourse.duration}
           onChange={(e) => setNewCourse({ ...newCourse, duration: e.target.value })}
           className="w-full border p-2 rounded"

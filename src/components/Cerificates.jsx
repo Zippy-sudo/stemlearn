@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import biology from "../images/Biology.jpg"
+import compsci from "../images/CompSci.jpeg"
+import engineering from "../images/Engineering.png"
+import math from "../images/Math.jpg"
+import physics from "../images/Physics.jpg"
+import science from "../images/Science.jpg"
 
-const CertificatesPage = ({ studentId }) => {
+const CertificatesPage = ({ studentId, baseURL }) => {
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -8,7 +14,7 @@ const CertificatesPage = ({ studentId }) => {
     // Fetch certificates from the backend
     const fetchCertificates = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:5555/certificates/${studentId}`);
+        const response = await fetch(`${baseURL}/certificates/${studentId}`);
         const data = await response.json();
         setCertificates(data);
       } catch (error) {
@@ -34,7 +40,19 @@ const CertificatesPage = ({ studentId }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {certificates.map((cert, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <div key={index} className="flex bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            {cert.enrollment.course.subject === "Mathematics" ?
+                            <img src={math} alt="math" title="Math"/>:
+                             enrollment.course.subject === "Physics" ?
+                            <img src={physics} alt="physics" title="Physics"/>:
+                             enrollment.course.subject === "Biology" ?
+                            <img src={biology} alt="biology" title="Biology"/>:
+                             enrollment.course.subject === "Computer Science" ? 
+                            <img src={compsci} alt="computer science" title="Computer Science"/>:
+                             enrollment.course.subject === "Engineering" ?
+                            <img src={engineering} alt="engineering" title="Engineering"/>:
+                            <img src={science} alt="generic science" title="Generic"/>
+            }
             <h2 className="text-xl font-bold mb-2">{cert.enrollment.course.title}</h2>
             <p className="text-gray-600 mb-4">{cert.enrollment.course.description}</p>
             <div className="space-y-2">

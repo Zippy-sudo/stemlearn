@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaHome, FaBook, FaChartBar, FaCertificate } from "react-icons/fa";
+import { FaHome, FaCertificate } from "react-icons/fa";
 import profile from "../images/profile.png";
 
 function StudentSidebar({ studentName }) {
@@ -27,14 +27,6 @@ function StudentSidebar({ studentName }) {
                 className="flex items-center px-6 py-3 w-full hover:bg-gray-700 transition"
               >
                 <FaHome className="mr-3" /> Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/grades"
-                className="flex items-center px-6 py-3 w-full hover:bg-gray-700 transition"
-              >
-                <FaChartBar className="mr-3" /> Grades
               </Link>
             </li>
             <li>

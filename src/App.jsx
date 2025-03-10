@@ -43,10 +43,6 @@ function App() {
           element={<Login setLoggedIn={setLoggedIn} baseURL={baseURL} />}
         />
         <Route
-          path="/AdmDashboard"
-          element={<AdmDashboard baseURL={baseURL} />}
-        />
-        <Route
           path="/admin/dashboard"
           element={<AdmDashboard baseURL={baseURL} />}
         />
