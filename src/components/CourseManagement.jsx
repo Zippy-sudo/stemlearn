@@ -202,9 +202,9 @@ function CourseManagement({ baseURL }) {
         <ul className="mt-4">
           {courses.map((course) => (
           <>
-          <p> ID: {course._id}</p>
             <li key={course._id ?? course.title} className="flex justify-between items-center bg-white p-4 rounded shadow mb-2">
               <div>
+              <p>Course ID: {course._id}</p>
                 <p className="text-lg font-semibold">{course.title}</p>
                 <p className="text-sm text-gray-600">{course.description}</p>
                 <p className="text-sm text-gray-500">Subject: {course.subject}</p>
