@@ -54,7 +54,7 @@ function AddTeacherForm({ baseURL }) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          teacher_id: newTeacher.public_id,
+          public_id: newTeacher.public_id,
         }),
       });
 
