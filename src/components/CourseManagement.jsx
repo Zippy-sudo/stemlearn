@@ -209,7 +209,7 @@ function CourseManagement({ baseURL }) {
                 <p className="text-sm text-gray-500">Duration: {course.duration} hours</p>
               </div>
               <div className="space-x-2">
-                <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" onClick={() => {setEditCourse({_id: course._id, title: course.title, description: course.description, subject: course.subject, duration: course.duration})}>
+                <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" onClick={() => {setEditCourse({_id: course._id, title: course.title, description: course.description, subject: course.subject, duration: course.duration})}}>
                   Edit
                 </button>
                 <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" onClick={() => handleDeleteCourse(course._id)}>
