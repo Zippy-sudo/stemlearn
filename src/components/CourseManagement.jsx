@@ -186,7 +186,7 @@ function CourseManagement({ baseURL }) {
             </button>
             <button
               type="button"
-              onClick={() => setEditCourse({ _id: null, title: "", description: "", subject: "", duration: "" })}
+              onClick={() => setEditCourse({_id: course._id, title: course.title, description: course.description, subject: course.subject, duration: course.duration})}
               className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
             >
               Cancel
