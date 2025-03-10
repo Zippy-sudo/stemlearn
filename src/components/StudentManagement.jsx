@@ -83,7 +83,7 @@ function EnrollmentForm({baseURL}) {
       course_id: selectedCourse,
     };
 
-    const response = await apiRequest("/enrollments", "POST", enrollmentData);
+    const response = await apiRequest(`${baseURL}/enrollments`, "POST", enrollmentData);
 
     if (response) {
       alert("Student enrolled successfully!");
@@ -124,7 +124,7 @@ function EnrollmentForm({baseURL}) {
       course_id: selectedCourse,
     };
 
-    const response = await apiRequest(`/enrollments/${editingEnrollment._id}`, "PATCH", updatedEnrollment);
+    const response = await apiRequest(`${baseURL}/enrollments/${editingEnrollment._id}`, "PATCH", updatedEnrollment);
 
     if (response) {
       alert("Enrollment updated successfully!");
@@ -149,7 +149,7 @@ function EnrollmentForm({baseURL}) {
 
   // Handles deleting an enrollment
   const handleDelete = async (id) => {
-    const response = await apiRequest(`/enrollments/${id}`, "DELETE");
+    const response = await apiRequest(`${baseURL}/enrollments/${id}`, "DELETE");
 
     if (response) {
       alert("Enrollment deleted successfully!");
