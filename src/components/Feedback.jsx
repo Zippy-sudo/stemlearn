@@ -74,7 +74,7 @@ const AssignmentSubmissionsList = ({ baseURL, userRole }) => {
   );
 };
 
-const Feedback = () => {
+const Feedback = ({ baseURL}) => {
   const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
@@ -87,7 +87,7 @@ const Feedback = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">FEEDBACK</h1>
-      <AssignmentSubmissionsList userRole={userRole} />
+      <AssignmentSubmissionsList baseURL={baseURL} userRole={userRole} />
     </div>
   );
 };
