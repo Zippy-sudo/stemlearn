@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { Link, useParams } from "react-router-dom";
 
 
@@ -68,7 +68,7 @@ const LessonsPage = ({ baseURL }) => {
     fetchLessons();
   }, [baseURL, courseId]); // Add courseId to dependency array
 
-  const fetchDiscussions = async (lessonId) => {
+  const fetchDiscussions = useCallback (async (lessonId) => {
     try {
       const response = await fetch(`${baseURL}/discussions`, {
         method: "GET",
@@ -95,7 +95,8 @@ const LessonsPage = ({ baseURL }) => {
       console.error("Fetch discussions error:", err);
       setError("Failed to fetch discussions.");
     }
-  };
+  }, [baseURL]);
+
   // Post a new discussion message
   const postDiscussion = async (lessonId) => {
     if (!newMessage.trim()) {
@@ -120,7 +121,7 @@ const LessonsPage = ({ baseURL }) => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const data = await response.json();
+      // const data = await response.json();
       setNewMessage(""); // Clear the input field
       fetchDiscussions(lessonId); // Refresh the discussion list
     } catch (err) {
@@ -150,7 +151,7 @@ const LessonsPage = ({ baseURL }) => {
         }
       });
     }
-  }, [lessonsToDisplay, showDiscussions]);
+  }, [lessonsToDisplay, showDiscussions, fetchDiscussions]);
 
 
   if (loading) return <p className="text-center text-gray-500">Loading lessons...</p>;

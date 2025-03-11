@@ -43,13 +43,13 @@ const EditQuiz = ({ baseURL }) => {
   }, [id, token, baseURL]);
 
   // Handle quiz title and description changes
-  const handleQuizChange = (e) => {
-    const { name, value } = e.target;
-    setQuiz((prevQuiz) => ({
-      ...prevQuiz,
-      [name]: value,
-    }));
-  };
+  // const handleQuizChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setQuiz((prevQuiz) => ({
+  //     ...prevQuiz,
+  //     [name]: value,
+  //   }));
+  // };
 
   // Handle question text changes
   const handleQuestionChange = (questionIndex, e) => {
