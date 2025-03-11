@@ -83,18 +83,19 @@ const LessonsPage = ({ baseURL }) => {
       }
 
       const data = await response.json();
-      let array = []
-      for (discussions of data ){
-      if (discussions.lesson_id === lessonId){
-      array.push(discussions)}}
-      console.log("Fetched discussions:", data);
-      setDiscussions(array); // Store discussions by lessonId
+      const filteredDiscussions = data.filter(discussion => discussion.lesson_id === lessonId);
+
+      console.log("Fetched discussions for lesson:", lessonId, filteredDiscussions);
+      
+      setDiscussions(prevDiscussions => ({
+        ...prevDiscussions,
+        [lessonId]: filteredDiscussions, // Store discussions for each lesson
+      }));
     } catch (err) {
       console.error("Fetch discussions error:", err);
       setError("Failed to fetch discussions.");
     }
   };
-
   // Post a new discussion message
   const postDiscussion = async (lessonId) => {
     if (!newMessage.trim()) {
@@ -130,12 +131,11 @@ const LessonsPage = ({ baseURL }) => {
 
   // Toggle discussions visibility for a specific lesson
   const toggleDiscussions = (lessonId) => {
-    setShowDiscussions((prev) => ({
+    setShowDiscussions(prev => ({
       ...prev,
-      [lessonId]: !prev[lessonId], // Toggle visibility
+      [lessonId]: !prev[lessonId],
     }));
-
-    // Fetch discussions if not already fetched
+  
     if (!discussions[lessonId]) {
       fetchDiscussions(lessonId);
     }
@@ -304,7 +304,7 @@ const LessonsPage = ({ baseURL }) => {
                         {discussions[lesson._id]?.map((discussion) => (
                           <li key={discussion._id} className="p-4 border border-gray-200 rounded-lg shadow-md">
                             <p className="text-gray-700 font-medium">
-                              <span className="text-gray-900">{discussion.user.name}</span> -{" "}
+                              <span className="text-gray-900">{discussion.user.name}</span> - {" "}
                               <span className="text-gray-600 text-sm">{discussion.created_at}</span>
                             </p>
                             <p className="text-gray-700 mt-2">{discussion.message}</p>
