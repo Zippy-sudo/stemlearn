@@ -191,7 +191,7 @@ const CreateCertificate = ({ baseURL }) => {
       if (enrollmentsResponse.ok) {
         const enrollmentsData = await enrollmentsResponse.json();
         const completedEnrollments = enrollmentsData.filter(
-          (enrollment) => (enrollment.progresses/enrollment.course.lessons) * 100 === 1
+          (enrollment) => Math.round((enrollment.progresses/enrollment.course.lessons) * 100) >= 1
         );
         setEnrollments(completedEnrollments);
       }
