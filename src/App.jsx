@@ -22,7 +22,7 @@ import CreateQuiz from "./pages/CreateQuiz";
 import EditQuiz from "./pages/EditQuiz";
 
 function App() {
-  const baseURL = "http://127.0.0.1:5555";
+  const baseURL = "https://stemlearn-db.onrender.com";
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     if (sessionStorage.getItem("Token")) {

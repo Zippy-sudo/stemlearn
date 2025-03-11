@@ -10,14 +10,14 @@ const LessonsPage = ({ baseURL }) => {
   const { courseId } = useParams(); // Get the courseId from the URL
 
   const [courseTitle, setCourseTitle] = useState("Loading...")
+  const [discussions, setDiscussions] = useState({})
+  const [newMessage, setNewMessage] = useState("")
+  const [showDiscussions, setShowDiscussions] = useState({})
 
   const handleSearchChange = (e) => {
     filterLessons(e.target.value);
   };
 
-  
-
-  // Filter lessons based on search term and subject
 
   // Filter lessons based on search term
   const filterLessons = (searchTerm) => {
@@ -67,6 +67,91 @@ const LessonsPage = ({ baseURL }) => {
 
     fetchLessons();
   }, [baseURL, courseId]); // Add courseId to dependency array
+
+  const fetchDiscussions = async (lessonId) => {
+    try {
+      const response = await fetch(`${baseURL}/discussions`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("Token")}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      let array = []
+      for (discussions of data ){
+      if (discussions.lesson_id === lessonId){
+      array.push(discussions)}}
+      console.log("Fetched discussions:", data);
+      setDiscussions(array); // Store discussions by lessonId
+    } catch (err) {
+      console.error("Fetch discussions error:", err);
+      setError("Failed to fetch discussions.");
+    }
+  };
+
+  // Post a new discussion message
+  const postDiscussion = async (lessonId) => {
+    if (!newMessage.trim()) {
+      alert("Please enter a message.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${baseURL}/discussions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("Token")}`,
+        },
+        body: JSON.stringify({
+          lesson_id: lessonId,
+          message: newMessage,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setNewMessage(""); // Clear the input field
+      fetchDiscussions(lessonId); // Refresh the discussion list
+    } catch (err) {
+      console.error("Post discussion error:", err);
+      setError("Failed to post the message.");
+    }
+  };
+
+  // Toggle discussions visibility for a specific lesson
+  const toggleDiscussions = (lessonId) => {
+    setShowDiscussions((prev) => ({
+      ...prev,
+      [lessonId]: !prev[lessonId], // Toggle visibility
+    }));
+
+    // Fetch discussions if not already fetched
+    if (!discussions[lessonId]) {
+      fetchDiscussions(lessonId);
+    }
+  };
+
+  // Fetch discussions when a lesson is expanded or loaded
+  useEffect(() => {
+    if (lessonsToDisplay.length > 0) {
+      lessonsToDisplay.forEach((lesson) => {
+        if (showDiscussions[lesson._id]) {
+          fetchDiscussions(lesson._id);
+        }
+      });
+    }
+  }, [lessonsToDisplay, showDiscussions]);
+
 
   if (loading) return <p className="text-center text-gray-500">Loading lessons...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
@@ -173,8 +258,65 @@ const LessonsPage = ({ baseURL }) => {
                     Submit Assignment
                   </Link>
                 </div>
+                {/* Discussions Section */}
+                <div className="mt-6">
+                  <button
+                    onClick={() => toggleDiscussions(lesson._id)}
+                    className="flex items-center text-blue-500 hover:text-blue-600"
+                  >
+                    <span className="mr-2">
+                      {showDiscussions[lesson._id] ? "Hide Discussions" : "Show Discussions"}
+                    </span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`h-5 w-5 transition-transform ${
+                        showDiscussions[lesson._id] ? "transform rotate-180" : ""
+                      }`}
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+
+                  {showDiscussions[lesson._id] && (
+                    <div className="mt-4">
+                      <div className="mb-4">
+                        <textarea
+                          placeholder="Enter your message"
+                          value={newMessage}
+                          onChange={(e) => setNewMessage(e.target.value)}
+                          className="w-full p-2 border border-gray-300 rounded-lg"
+                          rows="3"
+                        />
+                        <button
+                          onClick={() => postDiscussion(lesson._id)}
+                          className="mt-2 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        >
+                          Post Message
+                        </button>
+                      </div>
+                      <ul className="space-y-4">
+                        {discussions[lesson._id]?.map((discussion) => (
+                          <li key={discussion._id} className="p-4 border border-gray-200 rounded-lg shadow-md">
+                            <p className="text-gray-700 font-medium">
+                              <span className="text-gray-900">{discussion.user.name}</span> -{" "}
+                              <span className="text-gray-600 text-sm">{discussion.created_at}</span>
+                            </p>
+                            <p className="text-gray-700 mt-2">{discussion.message}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </div>
             ))
+ 
           ) : (
             <p className="text-center text-gray-500">No lessons available</p>
           )}
