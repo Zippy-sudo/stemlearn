@@ -48,12 +48,6 @@ function StudentDashboard({baseURL}) {
     return (
         <div className='flex'>
           <StudentSidebar studentName={studentName} baseURL={baseURL} />
-          <button
-            onClick={() => document.getElementById('my-courses-section').scrollIntoView({ behavior: 'smooth' })}
-          >
-            Scroll to My Courses
-          </button>
-      
           <div id="my-courses-section" className='flex-grow text-center'>
             <div className='text-center mt-4 pt-4 pb-4 bg-main-yellow'>
               <h2 className='text-xl'>My Courses</h2>
