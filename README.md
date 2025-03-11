@@ -15,7 +15,7 @@ This project demonstrates core React and Flask concepts, including:
 
 ## Screenshot
 
-![STEMLearn Screenshot](path/to/screenshot.png)
+![STEMLearn Screenshot](.images/STEMLearn.png)
 
 ## Features
 
@@ -76,7 +76,9 @@ This project demonstrates core React and Flask concepts, including:
 
 ### View Live Site
 
-Visit the deployed application at: [STEMLearn Live Site](http://stemlearn-db.onrender.com)
+Visit the deployed application at: [STEMLearn Live Site](http://superb-duckanoo-18547b.netlify.app/
+Resources
+)
 
 The live site allows you to:
 
@@ -155,7 +157,10 @@ If you want to run the project locally, you'll need:
 
 ## Backend API
 
-[STEMLearn Live Site](https://stemlearn-db.onrender.com)
+[STEMLearn Live Site](https://stemlearn-db.onrender.com
+Resources
+
+)
 
 ## Contributing
 
