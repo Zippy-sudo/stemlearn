@@ -13,21 +13,22 @@ body {
 }
 
 /* Header Styles */
-.student-dashboard header {
+.student-dashboard div {
   background-color: #ffffff;
   padding: 20px;
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 20px;
+  text-align: center;
 }
 
-.student-dashboard header h1 {
+.student-dashboard div h1 {
   margin: 0;
   font-size: 24px;
   font-weight: bold;
   color: #333;
 }
 
-.student-dashboard header nav {
+/* .student-dashboard header nav {
   margin-top: 10px;
   font-size: 14px;
   color: #666;
@@ -36,7 +37,7 @@ body {
 .student-dashboard header nav span {
   color: #4caf50;
   font-weight: bold;
-}
+} */
 
 /* Upcoming Quizzes Section */
 .upcoming-quizzes {

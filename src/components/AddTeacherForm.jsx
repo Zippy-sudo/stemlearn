@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 function AddTeacherForm({ baseURL }) {
   const [teacherData, setTeacherData] = useState({
@@ -19,8 +20,8 @@ function AddTeacherForm({ baseURL }) {
 
     const token = sessionStorage.getItem("Token");
     if (!token) {
-      alert("Unauthorized! Please log in.");
-      window.location.href = "/login";
+      toast.error("Unauthorized! Please log in.");
+      window.location.href = "/Login";
       return;
     }
 

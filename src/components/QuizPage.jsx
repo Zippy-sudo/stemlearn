@@ -87,7 +87,7 @@ const QuizPage = ({ baseURL }) => {
     } catch (err) {
       alert("Submission failed. Please try again.");
     }
-    navigate('/studentquiz')
+    navigate('/StudentQuiz')
   };
 
   if (loading) return <p className="text-center text-gray-500">Loading...</p>;

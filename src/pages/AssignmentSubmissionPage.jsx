@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AssignmentSubmissionPage = ({ baseURL }) => {
-  const lessonId  = useParams(); // Get lessonId from the URL
+  const {lessonsId}  = useParams(); // Get lessonId from the URL
   const navigate = useNavigate();
   const [submissionText, setSubmissionText] = useState("");
   const [fileUrl, setFileUrl] = useState("");
@@ -18,7 +19,6 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
         const token = sessionStorage.getItem("Token"); // Example
         const response = await fetch(`${baseURL}/assignments`, {
           headers: {
-            
             Authorization: `Bearer ${token}`,
           },
 
@@ -26,7 +26,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
         if (!response.ok) throw new Error("Failed to fetch submission.");
         const data = await response.json();
         const studentSubmission = data.find(
-          (sub) => sub.lesson_id === parseInt(lessonId)
+          (sub) => sub.lesson_id === parseInt(lessonsId)
         );
         if (studentSubmission) {
           setSubmission(studentSubmission);
@@ -41,7 +41,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
     };
 
     fetchSubmission();
-  }, [lessonId, baseURL]);
+  }, [lessonsId, baseURL]);
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -50,7 +50,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
     const token = sessionStorage.getItem("Token"); // Example
 
     const submissionData = {
-      lesson_id: lessonId.lessonsId,
+      lesson_id: lessonsId,
       submission_text: submissionText,
       file_url: fileUrl,
     };
@@ -70,14 +70,15 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to submit assignment.");
+        toast.error(`${errorData["Error"]}`)
+        return
       }
   
       const data = await response.json();
       setSubmission(data); // Update the submission state with the response
       setSuccess("Assignment submitted successfully!");
       setTimeout(() => {
-        navigate('/Courses'); // Redirect to the lessons page
+        navigate(`/Lessons/${data.Submission.lesson.course._id}`); // Redirect to the lessons page
       }, 1000);
       setError(""); // Clear any previous errors
     } catch (err) {

@@ -10,6 +10,7 @@ import science from "../images/Science.jpg"
 
 function StudentDashboard({baseURL}) {
     const [enrollments, setEnrollments] = useState([]);
+    const [loading, setLoading] = useState(true)
     const [studentName, setStudentName] = useState("")
     const token = sessionStorage.getItem('Token'); // Assuming the token is stored in sessionStorage
 
@@ -26,12 +27,14 @@ function StudentDashboard({baseURL}) {
                 const data = await response.json();
                 if (response.ok) {
                     setEnrollments(data);
+                    setLoading(false)
                     let capname = ""
                     for (const word of data[0].student.name.split(" ")) 
                         {capname += (word).slice(0,1).toUpperCase() + word.slice(1).toLowerCase() + " "}
                     setStudentName(capname)
                 } else {
                     console.error('Failed to fetch courses:', data.Error);
+                    setLoading(false)
                     let capname = ""
                     for (const word of data.Name.split(" ")) 
                         {capname += (word).slice(0,1).toUpperCase() + word.slice(1).toLowerCase() + " "}
@@ -52,8 +55,9 @@ function StudentDashboard({baseURL}) {
             <div className='text-center mt-4 pt-4 pb-4 bg-main-yellow'>
               <h2 className='text-xl'>My Courses</h2>
             </div>
-      
-            {enrollments.length > 0 ? (
+
+            {loading ? <p>Loading Enrollments...</p> :
+            (enrollments.length > 0 ? (
               <ul>
                 {enrollments.map((enrollment) => {
                   return (
@@ -83,9 +87,9 @@ function StudentDashboard({baseURL}) {
                         <p><strong>Duration:</strong> {enrollment.course.duration} Years</p>
                         <p><strong>Enrolled On:</strong> {enrollment.enrolled_on}</p>
                         <p><strong>Completion:</strong> {enrollment.progresses.length > 0 ? `${Math.round((enrollment.progresses.length / enrollment.course.lessons.length) * 100)} %` : "0%"}</p>
-                        <Link to={`/lessons/${enrollment.course._id}`}>
+                        <Link to={`/Lessons/${enrollment.course._id}`}>
                           <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                            Start Lessons
+                            Go to Lessons
                           </button>
                         </Link>
                       </div>
@@ -95,7 +99,7 @@ function StudentDashboard({baseURL}) {
               </ul>
             ) : (
               <p>You are not enrolled in any courses.</p>
-            )}
+            ))}
           </div>
         </div>
       );

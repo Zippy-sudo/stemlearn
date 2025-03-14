@@ -10,14 +10,7 @@ function CourseList({ loggedIn, baseURL }) {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`${baseURL}/unauthCourses`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("Token")}`,
-          },
-        });
+        const response = await fetch(`${baseURL}/unauthCourses`);
 
         if (!response.ok) {
           throw new Error(
@@ -38,12 +31,12 @@ function CourseList({ loggedIn, baseURL }) {
   }, [baseURL]);
 
   if (loading) return <p>Loading courses...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <p> {error}</p>;
 
   return (
-    <div className="popular-courses">
+    <div className="popular-courses m-5">
       <div className="text-center">
-        <h2>Most Popular Courses</h2>
+        <h2 className="text-lg">Popular Courses</h2>
       </div>
       <div className="courses-container">
         {courses.map((course) => (

@@ -5,7 +5,7 @@ import '../Features.css';
 function Features() {
   const navigate = useNavigate()
   function HandleClick() {
-    navigate("/signup")
+    navigate("/Signup")
   }
 
   return (

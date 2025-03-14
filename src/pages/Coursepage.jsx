@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import biology from "../images/Biology.jpg"
 import compsci from "../images/CompSci.jpeg"
 import engineering from "../images/Engineering.png"
@@ -83,14 +84,14 @@ const HandleEnroll = useCallback(async (e) => {
     });
     const data = await response.json();
     if (response.ok) {
-    alert("Enrollment successful!");
+    toast.success("Enrollment successful!");
     navigate("/StudentDashboard")
     } else {
-    alert(data.error || "Failed to enroll in the course. Please try again.");
+    toast.error(`${data["Error"]}`);
     }
   } catch (error) {
     console.error("Enrollment Error:", error);
-    alert("An error occurred. Please check your connection and try again.");
+    toast.error("An error occurred. Please check your connection and try again.");
   }
 }, [token, baseURL, navigate]);
 
@@ -204,7 +205,7 @@ const HandleEnroll = useCallback(async (e) => {
                   Enroll Now
                   </button>:
                   <Link
-                    to={"/login"}
+                    to={"/Login"}
                       className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
                   >
                   Enroll Now

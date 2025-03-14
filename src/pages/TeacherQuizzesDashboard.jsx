@@ -37,7 +37,7 @@ const TeacherQuizzesDashboard = ({ baseURL }) => {
   }, [token, baseURL]);
 
   const handleCreateQuiz = () => {
-    navigate("/create-quiz");
+    navigate("/Create-Quiz");
   };
 
   if (loading) return <p>Loading...</p>;

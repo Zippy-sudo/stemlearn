@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Login({ setLoggedIn, baseURL }) {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const sessionTimeout = useRef(null)
 
   function handleChange(event) {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -34,6 +36,17 @@ function Login({ setLoggedIn, baseURL }) {
       try {
         sessionStorage.setItem("Token", data["Token"]);
         sessionStorage.setItem("Role", data["Role"]);
+        sessionTimeout.current = setTimeout(() => {
+          setLoggedIn(false)
+          sessionStorage.removeItem("Token")
+          sessionStorage.removeItem("Role")
+          navigate("/Login")
+          toast.info("Session expired. Please login to continue.",{
+          position: "top-center",
+          autoClose: false,
+          closeButton: true,
+        })
+      }, 55 * 60 * 1000)
       } catch (storageError) {
         console.error("Storage access error:", storageError);
       }
@@ -41,17 +54,28 @@ function Login({ setLoggedIn, baseURL }) {
       setLoggedIn(true);
 
       if (data.Role === "ADMIN") {
-        navigate("/admin/dashboard");
+        navigate("/AdminDashboard");
+        toast.success("Login Successful.",{autoClose:1000})
       } else if (data.Role === "STUDENT") {
         navigate("/StudentDashboard");
+        toast.success("Login Successful.",{autoClose:1000})
       } else {
         navigate("/TeacherDashboard");
+        toast.success("Login Successful.",{autoClose:1000})
       }
     } catch (err) {
       setError("Failed to connect to server.");
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    return () => {
+      if (sessionTimeout.current) {
+        clearTimeout(sessionTimeout.current);
+      }
+    }
+  }, [])
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -104,7 +128,7 @@ function Login({ setLoggedIn, baseURL }) {
         <p className="text-center text-gray-600">
           Don't have an account?{" "}
           <button
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate("/Signup")}
             className="text-purple-500 hover:underline"
           >
             Sign up

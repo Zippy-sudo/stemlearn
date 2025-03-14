@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { toast } from "react-toastify";
 
 function CourseManagement({ baseURL }) {
   const [courses, setCourses] = useState([]);
@@ -25,8 +26,8 @@ function CourseManagement({ baseURL }) {
   async function apiRequest(url, method, body = null) {
     const token = sessionStorage.getItem("Token");
     if (!token) {
-      alert("Unauthorized! Please log in.");
-      window.location.href = "/login";
+      toast.error("Unauthorized! Please log in.");
+      window.location.href = "/Login";
       return;
     }
 
@@ -42,12 +43,7 @@ function CourseManagement({ baseURL }) {
     try {
       const response = await fetch(url, options);
       if (!response.ok) {
-        if (response.status === 401) {
-          alert("Session expired. Please log in again.");
-          sessionStorage.removeItem("Token");
-          window.location.href = "/login";
-        }
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
+        toast.error(`${response["Error"]}`)
       }
       return await response.json();
     } catch (error) {

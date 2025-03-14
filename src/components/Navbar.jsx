@@ -21,15 +21,12 @@ function Navbar({loggedIn, setLoggedIn}) {
           {whoami === "STUDENT" ? 
           <li><Link to="/StudentDashboard">Dashboard</Link></li>
           : whoami === "ADMIN" ?
-          <li><Link to="/admin/dashboard">Dashboard</Link></li>
+          <li><Link to="/AdminDashboard">Dashboard</Link></li>
           : whoami === "TEACHER" ?
-          <li><Link to="teacher/dashboard">Dashboard</Link></li>
+          <li><Link to="/TeacherDashboard">Dashboard</Link></li>
           :null
           }
-          <li><Link to="/courses">Courses</Link></li>
-          {whoami === "TEACHER" ?
-          <li><Link to="/teacher/dashboard">Feedback</Link></li>
-          : null}
+          <li><Link to="/Courses">Courses</Link></li>
         </ul>
         {loggedIn ?
         <div className="auth-buttons">
@@ -40,10 +37,10 @@ function Navbar({loggedIn, setLoggedIn}) {
         :
         <div className="auth-buttons">
         <button className="login-btn">
-          <Link to="/login">Login</Link>
+          <Link to="/Login">Login</Link>
         </button>
         <button className="signup-btn bg-main-yellow">
-          <Link to="/signup">Sign Up</Link>
+          <Link to="/Signup">Sign Up</Link>
         </button>
         </div>
         }
