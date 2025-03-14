@@ -122,7 +122,9 @@ const HandleEnroll = useCallback(async (e) => {
 
       {/* Sidebar */}
       <div className="flex">
-      <aside className="w-1/4 bg-gray-100 p-4 h-screen overflow-y-auto border-r">
+      <div className="fixed h-screen mr-2 z-0 min-w-80">
+      <div className="relative">
+      <aside className="absolute top-20 left-0 min-w-1/4 bg-gray-100 p-4 h-screen overflow-y-auto border-r">
         <h2 className="text-lg font-semibold mb-3">Courses</h2>
         <ul>
           {courses.map((course) => (
@@ -137,6 +139,8 @@ const HandleEnroll = useCallback(async (e) => {
           ))}
         </ul>
       </aside>
+      </div>
+      </div>
 
       {/* Main Content */}
       <div className="w-3/4 p-6">

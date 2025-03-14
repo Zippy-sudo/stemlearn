@@ -12,7 +12,7 @@ function Navbar({loggedIn, setLoggedIn}) {
   }
 
   return (
-    <nav className="navbar">
+    <nav className="navbar absolute w-full z-10">
       <div className="navbar-container">
         
         <div className="logo">STEMLearn</div>

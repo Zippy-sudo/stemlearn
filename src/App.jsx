@@ -56,7 +56,7 @@ function App() {
         />
         <Route
           path="/StudentDashboard"
-          element={<StudentDashboard baseURL={baseURL}/>}
+          element={<StudentDashboard baseURL={baseURL} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}
         />
         <Route
           path="/Courses"

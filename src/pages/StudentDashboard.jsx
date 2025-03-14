@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState, useRef} from 'react';
+import { Link, useNavigate} from 'react-router-dom';
+import { toast } from "react-toastify";
 import StudentSidebar from '../components/StudentSidebar';
 import biology from "../images/Biology.jpg"
 import compsci from "../images/CompSci.jpeg"
@@ -8,11 +9,13 @@ import math from "../images/Math.jpg"
 import physics from "../images/Physics.jpg"
 import science from "../images/Science.jpg"
 
-function StudentDashboard({baseURL}) {
+function StudentDashboard({baseURL, loggedIn, setLoggedIn}) {
     const [enrollments, setEnrollments] = useState([]);
     const [loading, setLoading] = useState(true)
     const [studentName, setStudentName] = useState("")
     const token = sessionStorage.getItem('Token'); // Assuming the token is stored in sessionStorage
+    const navigate = useNavigate()
+    const sessionTimeout = useRef(null)
 
     useEffect(() => {
         // Fetch enrolled courses
@@ -33,12 +36,18 @@ function StudentDashboard({baseURL}) {
                         {capname += (word).slice(0,1).toUpperCase() + word.slice(1).toLowerCase() + " "}
                     setStudentName(capname)
                 } else {
-                    console.error('Failed to fetch courses:', data.Error);
-                    setLoading(false)
-                    let capname = ""
-                    for (const word of data.Name.split(" ")) 
-                        {capname += (word).slice(0,1).toUpperCase() + word.slice(1).toLowerCase() + " "}
-                    setStudentName(capname)
+                  console.error('Failed to fetch courses:', data.Error);
+                  setLoggedIn(false)
+                  sessionStorage.removeItem("Token")
+                  sessionStorage.removeItem("Role")
+                  navigate("/Login")
+                  window.location.reload()
+                  toast.info("Session expired. Please login to continue.",{
+                  position: "top-center",
+                  autoClose: false,
+                  closeButton: true,
+                  }
+                  )
                 }
             } catch (error) {
                 console.error(`Failed to fetch courses:`, error);
@@ -49,9 +58,11 @@ function StudentDashboard({baseURL}) {
     }, [token, baseURL]);
 
     return (
-        <div className='flex'>
+        loggedIn ? 
+          <div className='flex relative'>
           <StudentSidebar studentName={studentName} baseURL={baseURL} />
-          <div id="my-courses-section" className='flex-grow text-center'>
+          <div className='min-w-80'></div>
+          <div id="my-courses-section" className='flex-grow mt-20'>
             <div className='text-center mt-4 pt-4 pb-4 bg-main-yellow'>
               <h2 className='text-xl'>My Courses</h2>
             </div>
@@ -101,7 +112,8 @@ function StudentDashboard({baseURL}) {
               <p>You are not enrolled in any courses.</p>
             ))}
           </div>
-        </div>
+        </div>:
+        null
       );
 }
 
