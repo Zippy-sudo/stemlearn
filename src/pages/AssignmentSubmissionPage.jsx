@@ -11,6 +11,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  let studentSubmission = null
 
   // Fetch submission details (if editing)
   useEffect(() => {
@@ -23,15 +24,16 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
           },
 
         });
-        if (!response.ok) throw new Error("Failed to fetch submission.");
+        if (response.ok){ 
         const data = await response.json();
-        const studentSubmission = data.find(
+        studentSubmission = data.filter(
           (sub) => sub.lesson_id === parseInt(lessonsId)
         );
-        if (studentSubmission) {
-          setSubmission(studentSubmission);
-          setSubmissionText(studentSubmission.submission_text || "");
-          setFileUrl(studentSubmission.file_url || "");
+      } 
+        if (studentSubmission.length > 0) {
+          setSubmission(studentSubmission[studentSubmission.length - 1]);
+          setSubmissionText(studentSubmission[studentSubmission.length - 1].submission_text || "");
+          setFileUrl(studentSubmission[studentSubmission.length - 1].file_url || "");
         }
       } catch (err) {
         setError(err.message);
@@ -50,7 +52,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
     const token = sessionStorage.getItem("Token"); // Example
 
     const submissionData = {
-      lesson_id: lessonsId,
+      lesson_id: parseInt(lessonsId),
       submission_text: submissionText,
       file_url: fileUrl,
     };

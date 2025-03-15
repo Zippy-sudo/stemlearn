@@ -62,8 +62,8 @@ function StudentDashboard({baseURL, loggedIn, setLoggedIn}) {
           <div className='flex relative'>
           <StudentSidebar studentName={studentName} baseURL={baseURL} />
           <div className='min-w-80'></div>
-          <div id="my-courses-section" className='flex-grow mt-20'>
-            <div className='text-center mt-4 pt-4 pb-4 bg-main-yellow'>
+          <div id="my-courses-section" className='flex-grow mt-20 items-center'>
+            <div className='text-center mt-4 pt-4 pb-4 bg-main-yellow mx-4'>
               <h2 className='text-xl'>My Courses</h2>
             </div>
 

@@ -112,11 +112,7 @@ const CertificateCard = ({ certificate, onDownload }) => (
         </p>
         <p className="text-gray-700">
           Issued On: <span className="font-medium">
-            {new Date(certificate.issued_on).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}
+            {certificate.issued_on}
           </span>
         </p>
       </div>
@@ -250,8 +246,8 @@ const StudentCertificates = ({ baseURL }) => {
        cert.enrollment.student.name.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     .sort((a, b) => {
-      const dateA = new Date(a.issued_on);
-      const dateB = new Date(b.issued_on);
+      const dateA = new Date(a.issued_on.split("/")[2],a.issued_on.split("/")[1], a.issued_on.split("/")[0],0,0,0,0);
+      const dateB = new Date(a.issued_on.split("/")[2],a.issued_on.split("/")[1], a.issued_on.split("/")[0],0,0,0,0);;
       return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
     });
 

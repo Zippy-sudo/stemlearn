@@ -120,11 +120,13 @@ const HandleEnroll = useCallback(async (e) => {
       </select>
       </div>
 
-      {/* Sidebar */}
       <div className="flex">
-      <div className="fixed h-screen mr-2 z-0 min-w-80">
-      <div className="relative">
-      <aside className="absolute top-20 left-0 min-w-1/4 bg-gray-100 p-4 h-screen overflow-y-auto border-r">
+      <div className="min-w-64 bg-gray-100 border-r"></div>
+
+      {/* Sidebar */}
+      <div className="flex fixed h-screen mr-2 z-0 min-w-64">
+      <div className="relative min-w-64">
+      <aside className=" absolute bg-gray-100 p-4 h-screen overflow-y-auto border-r">
         <h2 className="text-lg font-semibold mb-3">Courses</h2>
         <ul>
           {courses.map((course) => (
@@ -143,7 +145,8 @@ const HandleEnroll = useCallback(async (e) => {
       </div>
 
       {/* Main Content */}
-      <div className="w-3/4 p-6">
+      <div className="flex flex-col grow">
+      <div className="p-6">
         {coursesToDisplay.length > 0 ? (
           coursesToDisplay.map((course) => (
             <div
@@ -223,7 +226,8 @@ const HandleEnroll = useCallback(async (e) => {
         )}
       </div>
       </div>
-    </div>
+      </div>
+      </div>
   );
 };
 
