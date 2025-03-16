@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const EditQuiz = ({ baseURL }) => {
   const { id } = useParams();
@@ -8,10 +8,12 @@ const EditQuiz = ({ baseURL }) => {
     due_date: "",
     questions: [],
   });
+  const [deletedQuestions, setDeletedQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const token = sessionStorage.getItem("Token");
-  const navigate = useNavigate();
 
   // Fetch the quiz data based on the ID
   useEffect(() => {
@@ -42,14 +44,15 @@ const EditQuiz = ({ baseURL }) => {
     fetchQuiz();
   }, [id, token, baseURL]);
 
-  // Handle quiz title and description changes
-  // const handleQuizChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setQuiz((prevQuiz) => ({
-  //     ...prevQuiz,
-  //     [name]: value,
-  //   }));
-  // };
+  // Handle scalar field changes (lesson_id, due_date)
+  const handleScalarChange = (e) => {
+    const { name, value } = e.target;
+    setQuiz((prevQuiz) => ({
+      ...prevQuiz,
+      [name]: value,
+    }));
+    setSuccess(null); // Clear success message on change
+  };
 
   // Handle question text changes
   const handleQuestionChange = (questionIndex, e) => {
@@ -59,6 +62,7 @@ const EditQuiz = ({ baseURL }) => {
       updatedQuestions[questionIndex].question = value;
       return { ...prevQuiz, questions: updatedQuestions };
     });
+    setSuccess(null); // Clear success message on change
   };
 
   // Handle answer text changes
@@ -69,9 +73,10 @@ const EditQuiz = ({ baseURL }) => {
       updatedQuestions[questionIndex][`option${answerIndex + 1}`] = value;
       return { ...prevQuiz, questions: updatedQuestions };
     });
+    setSuccess(null); // Clear success message on change
   };
 
-  // Handle correct answer changes
+  // Handle correct answer selection changes
   const handleCorrectAnswerChange = (questionIndex, e) => {
     const { value } = e.target;
     setQuiz((prevQuiz) => {
@@ -79,6 +84,7 @@ const EditQuiz = ({ baseURL }) => {
       updatedQuestions[questionIndex].correct_answer = value;
       return { ...prevQuiz, questions: updatedQuestions };
     });
+    setSuccess(null); // Clear success message on change
   };
 
   // Add a new question
@@ -97,6 +103,7 @@ const EditQuiz = ({ baseURL }) => {
         },
       ],
     }));
+    setSuccess(null); // Clear success message on addition
   };
 
   // Delete a question
@@ -105,18 +112,31 @@ const EditQuiz = ({ baseURL }) => {
       const updatedQuestions = prevQuiz.questions.filter(
         (_, index) => index !== questionIndex
       );
+      const questionToDelete = prevQuiz.questions[questionIndex];
+      if (questionToDelete._id) {
+        setDeletedQuestions((prevDeleted) => [
+          ...prevDeleted,
+          questionToDelete._id,
+        ]);
+      }
       return { ...prevQuiz, questions: updatedQuestions };
     });
+    setSuccess(null); // Clear success message on deletion
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+    setSuccess(null);
+
     try {
       const payload = {
         lesson_id: quiz.lesson_id,
         due_date: quiz.due_date,
         questions: quiz.questions.map((question) => ({
+          _id: question._id,
           question: question.question,
           option1: question.option1,
           option2: question.option2,
@@ -124,6 +144,7 @@ const EditQuiz = ({ baseURL }) => {
           option4: question.option4,
           correct_answer: question.correct_answer,
         })),
+        deletedQuestions: deletedQuestions, // Include deleted questions in the payload
       };
 
       const response = await fetch(`${baseURL}/quizzes/${id}`, {
@@ -136,13 +157,17 @@ const EditQuiz = ({ baseURL }) => {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.Error || "Failed to update quiz");
-      alert("Quiz updated successfully!");
-      navigate("/quizzes-dashboard");
+
+      setSuccess("Quiz updated successfully!");
+      setDeletedQuestions([]); // Clear deleted questions after success
     } catch (err) {
       setError(err.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
+  // Render loading, error, or form UI
   if (loading) return <p className="text-center text-gray-600">Loading...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
   if (!quiz || !quiz.questions)
@@ -152,8 +177,34 @@ const EditQuiz = ({ baseURL }) => {
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Edit Quiz</h2>
+        {success && <p className="text-center text-green-500">{success}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Questions */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Lesson ID:
+            </label>
+            <input
+              type="text"
+              name="lesson_id"
+              value={quiz.lesson_id}
+              onChange={handleScalarChange}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Due Date:
+            </label>
+            <input
+              type="datetime-local"
+              name="due_date"
+              value={quiz.due_date}
+              onChange={handleScalarChange}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
           <div className="space-y-6">
             {quiz.questions?.map((question, questionIndex) => (
               <div key={questionIndex} className="border p-4 rounded-lg">
@@ -169,8 +220,6 @@ const EditQuiz = ({ baseURL }) => {
                     Delete Question
                   </button>
                 </div>
-
-                {/* Question Text */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Question Text:
@@ -183,8 +232,6 @@ const EditQuiz = ({ baseURL }) => {
                     required
                   />
                 </div>
-
-                {/* Answers */}
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-700">
                     Answers:
@@ -203,8 +250,6 @@ const EditQuiz = ({ baseURL }) => {
                     </div>
                   ))}
                 </div>
-
-                {/* Correct Answer */}
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-700">
                     Correct Answer:
@@ -226,8 +271,6 @@ const EditQuiz = ({ baseURL }) => {
               </div>
             ))}
           </div>
-
-          {/* Add Question Button */}
           <button
             type="button"
             onClick={addQuestion}
@@ -235,13 +278,12 @@ const EditQuiz = ({ baseURL }) => {
           >
             Add Question
           </button>
-
-          {/* Save Changes Button */}
           <button
             type="submit"
+            disabled={submitting}
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Save Changes
+            {submitting ? "Submitting..." : "Save Changes"}
           </button>
         </form>
       </div>
