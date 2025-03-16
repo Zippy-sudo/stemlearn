@@ -100,8 +100,10 @@ const HandleEnroll = useCallback(async (e) => {
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
+  <div className="flex justify-center">
+  <div className="max-w-[1200px]">
   <div className="flex flex-col">
-    <div className="mx-auto p-4 place-content-between">
+    <div className="mx-auto p-4 justify-center place-content-between">
     {/* Search Here */}
       <input type="text"
       placeholder="Search..."
@@ -121,12 +123,11 @@ const HandleEnroll = useCallback(async (e) => {
       </div>
 
       <div className="flex">
-      <div className="min-w-64 bg-gray-100 border-r"></div>
 
       {/* Sidebar */}
-      <div className="flex fixed h-screen mr-2 z-0 min-w-64">
+      <div className="flex">
       <div className="relative min-w-64">
-      <aside className=" absolute bg-gray-100 p-4 h-screen overflow-y-auto border-r">
+      <aside className=" sticky top-0 bg-gray-100 p-4 h-screen overflow-y-auto border-r">
         <h2 className="text-lg font-semibold mb-3">Courses</h2>
         <ul>
           {courses.map((course) => (
@@ -146,13 +147,13 @@ const HandleEnroll = useCallback(async (e) => {
 
       {/* Main Content */}
       <div className="flex flex-col grow">
-      <div className="p-6">
+      <div className="px-6">
         {coursesToDisplay.length > 0 ? (
           coursesToDisplay.map((course) => (
             <div
               key={course._id}
               id={`course-${course._id}`}
-              className="flex flex-col items-center bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6"
+              className="flex flex-col items-center bg-white px-6 rounded-lg shadow-md border border-gray-200 mb-6"
             >
               <div className="flex w-1/2 m-5">
                 {course.subject === "Mathematics" ?
@@ -206,7 +207,7 @@ const HandleEnroll = useCallback(async (e) => {
                 {loggedIn ?
                   <button
                     id={course._id}
-                    className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+                    className="bg-blue-500 rounded-full text-white px-6 py-2 rounded hover:bg-blue-600"
                     onClick={(e) => HandleEnroll(e)}
                   >
                   Enroll Now
@@ -224,6 +225,8 @@ const HandleEnroll = useCallback(async (e) => {
         ) : (
           <p className="text-center text-gray-500">No courses available</p>
         )}
+      </div>
+      </div>
       </div>
       </div>
       </div>

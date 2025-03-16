@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState} from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import { toast } from "react-toastify";
 import StudentSidebar from '../components/StudentSidebar';
@@ -15,7 +15,6 @@ function StudentDashboard({baseURL, loggedIn, setLoggedIn}) {
     const [studentName, setStudentName] = useState("")
     const token = sessionStorage.getItem('Token'); // Assuming the token is stored in sessionStorage
     const navigate = useNavigate()
-    const sessionTimeout = useRef(null)
 
     useEffect(() => {
         // Fetch enrolled courses
@@ -36,6 +35,11 @@ function StudentDashboard({baseURL, loggedIn, setLoggedIn}) {
                         {capname += (word).slice(0,1).toUpperCase() + word.slice(1).toLowerCase() + " "}
                     setStudentName(capname)
                 } else {
+                  if (response.status === 404) {
+                    toast.info("You are not enrolled in any Courses")
+                    setLoading(false)
+                    return
+                  }
                   console.error('Failed to fetch courses:', data.Error);
                   setLoggedIn(false)
                   sessionStorage.removeItem("Token")
@@ -55,14 +59,15 @@ function StudentDashboard({baseURL, loggedIn, setLoggedIn}) {
         }
 
         fetchMyCourses();
-    }, [token, baseURL]);
+    }, [token, baseURL, navigate, setLoggedIn]);
 
     return (
-        loggedIn ? 
+      <div className='flex justify-center'>
+      <div className='w-[1200px]'>
+        {loggedIn ? 
           <div className='flex relative'>
           <StudentSidebar studentName={studentName} baseURL={baseURL} />
-          <div className='min-w-80'></div>
-          <div id="my-courses-section" className='flex-grow mt-20 items-center'>
+          <div id="my-courses-section" className='flex-grow items-center'>
             <div className='text-center mt-4 pt-4 pb-4 bg-main-yellow mx-4'>
               <h2 className='text-xl'>My Courses</h2>
             </div>
@@ -72,7 +77,7 @@ function StudentDashboard({baseURL, loggedIn, setLoggedIn}) {
               <ul>
                 {enrollments.map((enrollment) => {
                   return (
-                    <li key={enrollment._id} className='flex flex-col items-center bg-white text-center m-4 p-2'>
+                    <li key={enrollment._id} className='flex rounded-xl flex-col items-center bg-white text-center m-4 p-2 shadow-md'>
                       <div className='flex flex-col bg-white m-2 items-center justify-center'>
                         <div className='h-[250px] w-[500px]'>
                           {enrollment.course.subject === "Mathematics" ? (
@@ -99,7 +104,7 @@ function StudentDashboard({baseURL, loggedIn, setLoggedIn}) {
                         <p><strong>Enrolled On:</strong> {enrollment.enrolled_on}</p>
                         <p><strong>Completion:</strong> {enrollment.progresses.length > 0 ? `${Math.round((enrollment.progresses.length / enrollment.course.lessons.length) * 100)} %` : "0%"}</p>
                         <Link to={`/Lessons/${enrollment.course._id}`}>
-                          <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                          <button className="rounded-full mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                             Go to Lessons
                           </button>
                         </Link>
@@ -109,11 +114,16 @@ function StudentDashboard({baseURL, loggedIn, setLoggedIn}) {
                 })}
               </ul>
             ) : (
-              <p>You are not enrolled in any courses.</p>
+              <div className='text-center mt-1 pt-1 pb-4 mx-4'>
+              <p>You are not enrolled in any Courses.</p>
+              </div>
             ))}
           </div>
         </div>:
         null
+        }
+        </div>
+        </div>
       );
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate} from "react-router-dom";
+import { toast } from "react-toastify";
 
 const QuizPage = ({ baseURL }) => {
   const { quizId } = useParams();
@@ -50,8 +51,8 @@ const QuizPage = ({ baseURL }) => {
       answers.push(question.correct_answer)
     }
     if (choiceMap.size < quiz.questions.length) {
-      alert("Please answer all questions before submitting.");
-      window.location.reload()
+      toast.error("Please answer all questions before submitting.");
+      // window.location.reload()
       return;
     }
     if (submitted) {
@@ -85,7 +86,7 @@ const QuizPage = ({ baseURL }) => {
       }));
       setSubmissionMessage(result.Success || "Quiz submitted successfully!");
     } catch (err) {
-      alert("Submission failed. Please try again.");
+      toast.error("Submission failed. Please try again.");
     }
     navigate('/StudentQuiz')
   };

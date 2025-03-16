@@ -169,7 +169,9 @@ const LessonsPage = ({ baseURL }) => {
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
-    <div className="flex flex-col absolute top-20">
+    <div className="flex justify-center">
+    <div className="max-w[1200px]">
+    <div className="flex flex-col">
       {/* Search and Subject Filter */}
       <div className="mx-auto p-4 place-content-between">
         <input
@@ -182,9 +184,9 @@ const LessonsPage = ({ baseURL }) => {
 
       {/* Sidebar and Main Content */}
       <div className="flex">
-        <div className="min-w-64"></div>
+        {/* <div className="min-w-64"></div> */}
         {/* Sidebar */}
-        <aside className="max-w-64 fixed bg-gray-100 p-4 h-screen overflow-y-auto border-r">
+        <aside className="max-w-64 sticky top-0 min-w-64 bg-gray-100 p-4 h-screen overflow-y-auto border-r">
           <h2 className="text-lg font-semibold mb-3">Lessons</h2>
           <ul>
             {lessonsToDisplay.map((lesson) => (
@@ -205,7 +207,7 @@ const LessonsPage = ({ baseURL }) => {
         <div className="mx-2">
           <p className="text-center text-5xl">{courseTitle}</p>
         </div>
-        <div className="w-3/4 p-6">
+        <div className="p-6">
           {lessonsToDisplay.length > 0 ? (
             lessonsToDisplay.map((lesson) => (
               <div
@@ -354,6 +356,8 @@ const LessonsPage = ({ baseURL }) => {
           )}
         </div>
       </div>
+    </div>
+    </div>
     </div>
     </div>
   );

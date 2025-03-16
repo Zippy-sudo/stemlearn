@@ -48,12 +48,9 @@ const StudentQuizDashboard = ({ baseURL }) => {
 
   return (
     <div className="student-dashboard">
-      <div className="w-full">
-        <h1 className="text-center">Quiz Page</h1>
-      </div>
 
       <div className="upcoming-quizzes">
-        <h3>Upcoming Quizzes</h3>
+        <h3>All Quizzes</h3>
         <table>
           <thead>
             <tr>

@@ -11,10 +11,10 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  let studentSubmission = null
 
   // Fetch submission details (if editing)
   useEffect(() => {
+    let studentSubmission = null
     const fetchSubmission = async () => {
       try {
         const token = sessionStorage.getItem("Token"); // Example
@@ -94,7 +94,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto p-6 m-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">
         {submission ? "Edit Submission" : "Submit Assignment"}
       </h2>

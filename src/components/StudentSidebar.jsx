@@ -6,9 +6,9 @@ import profile from "../images/profile.png";
 
 function StudentSidebar({ studentName }) {
   return (
-    <div className="h-screen bg-gray-700 fixed mr-2 z-0 min-w-80">
+    <div className="sticky top-0 h-screen min-w-64 bg-gray-700">
       <div className="relative">
-      <div className="absolute top-20 left-0 w-64 bg-gray-700 text-white flex flex-col items-start  items-center mr-6 p-4">
+      <div className="left-0 w-64 bg-gray-700 text-white flex flex-col items-start  items-center p-4">
         {/* Profile Section */}
         <div className="mt-auto flex flex-col items-center">
           <img
