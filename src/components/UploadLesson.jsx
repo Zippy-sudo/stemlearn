@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 function UploadLesson({ baseURL, fetchLessons }) {
   const [title, setTitle] = useState("");
@@ -13,8 +14,8 @@ function UploadLesson({ baseURL, fetchLessons }) {
 
     const token = sessionStorage.getItem("Token");
     if (!token) {
-      alert("Unauthorized! Please log in.");
-      window.location.href = "/login";
+      toast.error("Unauthorized! Please log in.");
+      window.location.href = "/Login";
       return;
     }
 

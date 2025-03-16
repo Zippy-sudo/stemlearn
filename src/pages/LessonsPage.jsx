@@ -48,8 +48,19 @@ const LessonsPage = ({ baseURL }) => {
         }
 
         const data = await response.json();
-        setCourseTitle(data[0].course.title) 
-        setLessons(data);
+        if (data) {
+          for (const lesson of data){
+            if (lesson.course._id === parseInt(courseId)){
+              setCourseTitle(lesson.course.title)
+            }
+          }
+          setLessons(data);
+        }
+        else {
+          fetch(`${baseURL}/courses/${courseId}`)
+          .then(resp => resp.json())
+          .then(course => setCourseTitle(course.title))
+        }
 
         // Filter lessons by courseId if it exists in the URL
         if (courseId) {
@@ -158,6 +169,8 @@ const LessonsPage = ({ baseURL }) => {
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
+    <div className="flex justify-center">
+    <div className="max-w[1200px]">
     <div className="flex flex-col">
       {/* Search and Subject Filter */}
       <div className="mx-auto p-4 place-content-between">
@@ -169,14 +182,11 @@ const LessonsPage = ({ baseURL }) => {
         />
       </div>
 
-      <div>
-      <p className="text-center text-5xl">{courseTitle}</p>
-      </div>
-
       {/* Sidebar and Main Content */}
       <div className="flex">
+        {/* <div className="min-w-64"></div> */}
         {/* Sidebar */}
-        <aside className="w-1/4 bg-gray-100 p-4 h-screen overflow-y-auto border-r">
+        <aside className="max-w-64 sticky top-0 min-w-64 bg-gray-100 p-4 h-screen overflow-y-auto border-r">
           <h2 className="text-lg font-semibold mb-3">Lessons</h2>
           <ul>
             {lessonsToDisplay.map((lesson) => (
@@ -193,7 +203,11 @@ const LessonsPage = ({ baseURL }) => {
         </aside>
 
         {/* Main Content */}
-        <div className="w-3/4 p-6">
+        <div className="flex flex-col">
+        <div className="mx-2">
+          <p className="text-center text-5xl">{courseTitle}</p>
+        </div>
+        <div className="p-6">
           {lessonsToDisplay.length > 0 ? (
             lessonsToDisplay.map((lesson) => (
               <div
@@ -247,13 +261,13 @@ const LessonsPage = ({ baseURL }) => {
                 {/* Quizzes & Assignments Links */}
                 <div className="mt-4 flex space-x-4">
                   <Link
-                    to={`/studentquiz`}
+                    to={`/StudentQuiz`}
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                   >
                     Take Quiz
                   </Link>
                   <Link
-                    to={`/assignments/${lesson._id}`}
+                    to={`/Assignments/${lesson._id}`}
                     className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
                   >
                     Submit Assignment
@@ -287,6 +301,36 @@ const LessonsPage = ({ baseURL }) => {
                   {showDiscussions[lesson._id] && (
                     <div className="mt-4">
                       <div className="mb-4">
+                      <ul className="h-64 flex flex-col w-full overflow-y-scroll space-y-4 m-3 items-end">
+                        {discussions[lesson._id]?.length > 0 ? (
+                        discussions[lesson._id].map((discussion) => (discussion.user.role === "STUDENT" ?
+                          <li key={discussion._id} className="w-[350px] bg-aliceblue p-4 border border-gray-200 rounded-lg shadow-md">
+                            <div className="w-full bg-white p-3">
+                            <p className="flex justify-between text-gray-700 font-medium">
+                              <span className="text-gray-900">{discussion.user.name}</span>
+                              <span className="text-gray-600 text-sm">{discussion.created_at}</span>
+                            </p>
+                            <p className="text-gray-700 text-start mt-2">{discussion.message}</p>
+                            </div>
+                          </li>
+                          :
+                          <li key={discussion._id} className="w-[350px] p-4 border border-gray-200 rounded-lg shadow-md self-start">
+                            <div className="w-full bg-white p-3">
+                            <p className="flex justify-between text-gray-700 font-medium">
+                              <span className="text-gray-900">{discussion.user.name}</span>
+                              <span className="text-gray-600 text-sm">{discussion.created_at}</span>
+                            </p>
+                            <p className="text-gray-700 text-start mt-2">{discussion.message}</p>
+                            </div>
+                          </li>
+                        ))
+                      ) : (
+                        <div className="flex w-full h-full bg-gray-300 items-center justify-center">
+                        <p className="bg-gray-300">No Discussions found</p>
+                        </div>
+                      )
+                        }
+                      </ul>
                         <textarea
                           placeholder="Enter your message"
                           value={newMessage}
@@ -298,20 +342,9 @@ const LessonsPage = ({ baseURL }) => {
                           onClick={() => postDiscussion(lesson._id)}
                           className="mt-2 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                         >
-                          Post Message
+                          Send
                         </button>
                       </div>
-                      <ul className="space-y-4">
-                        {discussions[lesson._id]?.map((discussion) => (
-                          <li key={discussion._id} className="p-4 border border-gray-200 rounded-lg shadow-md">
-                            <p className="text-gray-700 font-medium">
-                              <span className="text-gray-900">{discussion.user.name}</span> - {" "}
-                              <span className="text-gray-600 text-sm">{discussion.created_at}</span>
-                            </p>
-                            <p className="text-gray-700 mt-2">{discussion.message}</p>
-                          </li>
-                        ))}
-                      </ul>
                     </div>
                   )}
                 </div>
@@ -323,6 +356,9 @@ const LessonsPage = ({ baseURL }) => {
           )}
         </div>
       </div>
+    </div>
+    </div>
+    </div>
     </div>
   );
 };

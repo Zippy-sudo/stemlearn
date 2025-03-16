@@ -40,7 +40,7 @@ const StudentQuizDashboard = ({ baseURL }) => {
       console.error("Quiz ID is undefined!");
       return;
     }
-    navigate(`/quiz/${quizId}`);
+    navigate(`/Quiz/${quizId}`);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -48,21 +48,15 @@ const StudentQuizDashboard = ({ baseURL }) => {
 
   return (
     <div className="student-dashboard">
-      <header>
-        <h1>Student Dashboard</h1>
-        <nav>
-          <span>Home</span> &gt; <span>Quizzes</span>
-        </nav>
-      </header>
 
       <div className="upcoming-quizzes">
-        <h3>Upcoming Quizzes</h3>
+        <h3>All Quizzes</h3>
         <table>
           <thead>
             <tr>
               <th>Lesson</th>
               <th>Course</th>
-              <th>due_date</th>
+              <th>Due Date</th>
               <th>Attempts</th>
               <th>Top Score</th>
               <th>Actions</th>
