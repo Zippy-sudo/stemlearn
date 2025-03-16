@@ -167,11 +167,11 @@ const CreateCertificate = ({ baseURL }) => {
         throw new Error(errorData.Error || `Failed to delete certificate: ${response.status}`);
       }
 
-      const data = await response.json().catch(() => ({ Success: "Certificate deleted successfully" }));
+      const data = await response.json().catch(() => ({ Error: "Certificate deletion failed" }));
 
       await refreshData(token);
 
-      toast.success("Certificate deleted successfully!");
+      toast.success(`${data.Success}`);
     } catch (err) {
       console.error("Delete certificate error:", err);
       setError(`Error deleting certificate: ${err.message}`);
