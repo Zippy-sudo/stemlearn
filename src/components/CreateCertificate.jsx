@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 const CreateCertificate = ({ baseURL }) => {
   const [enrollments, setEnrollments] = useState([]);
@@ -7,6 +8,7 @@ const CreateCertificate = ({ baseURL }) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
 
   // Fetch all enrollments and certificates
   useEffect(() => {
@@ -35,7 +37,7 @@ const CreateCertificate = ({ baseURL }) => {
         
         // Filter enrollments with 100% completion
         const completedEnrollments = enrollmentsData.filter(
-          (enrollment) => enrollment.completion_percentage === 100
+          (enrollment) => (enrollment.progresses.length / enrollment.course.lessons.length) === 1
         );
         setEnrollments(completedEnrollments);
 
@@ -119,7 +121,7 @@ const CreateCertificate = ({ baseURL }) => {
 
       await refreshData(token);
 
-      setMessage(data.Success || "Certificate created successfully!");
+      toast.success("Certificate created successfully!");
       setSelectedEnrollmentId("");
     } catch (err) {
       console.error("Create certificate error:", err);
@@ -165,11 +167,11 @@ const CreateCertificate = ({ baseURL }) => {
         throw new Error(errorData.Error || `Failed to delete certificate: ${response.status}`);
       }
 
-      const data = await response.json().catch(() => ({ Success: "Certificate deleted successfully" }));
+      const data = await response.json().catch(() => ({ Error: "Certificate deletion failed" }));
 
       await refreshData(token);
 
-      setMessage(data.Success || "Certificate deleted successfully!");
+      toast.success(`${data.Success}`);
     } catch (err) {
       console.error("Delete certificate error:", err);
       setError(`Error deleting certificate: ${err.message}`);

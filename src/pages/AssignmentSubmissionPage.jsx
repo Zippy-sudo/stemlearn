@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AssignmentSubmissionPage = ({ baseURL }) => {
-  const lessonId  = useParams(); // Get lessonId from the URL
+  const {lessonsId}  = useParams(); // Get lessonId from the URL
   const navigate = useNavigate();
   const [submissionText, setSubmissionText] = useState("");
   const [fileUrl, setFileUrl] = useState("");
@@ -13,25 +14,26 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
 
   // Fetch submission details (if editing)
   useEffect(() => {
+    let studentSubmission = null
     const fetchSubmission = async () => {
       try {
         const token = sessionStorage.getItem("Token"); // Example
         const response = await fetch(`${baseURL}/assignments`, {
           headers: {
-            
             Authorization: `Bearer ${token}`,
           },
 
         });
-        if (!response.ok) throw new Error("Failed to fetch submission.");
+        if (response.ok){ 
         const data = await response.json();
-        const studentSubmission = data.find(
-          (sub) => sub.lesson_id === parseInt(lessonId)
+        studentSubmission = data.filter(
+          (sub) => sub.lesson_id === parseInt(lessonsId)
         );
-        if (studentSubmission) {
-          setSubmission(studentSubmission);
-          setSubmissionText(studentSubmission.submission_text || "");
-          setFileUrl(studentSubmission.file_url || "");
+      } 
+        if (studentSubmission.length > 0) {
+          setSubmission(studentSubmission[studentSubmission.length - 1]);
+          setSubmissionText(studentSubmission[studentSubmission.length - 1].submission_text || "");
+          setFileUrl(studentSubmission[studentSubmission.length - 1].file_url || "");
         }
       } catch (err) {
         setError(err.message);
@@ -41,7 +43,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
     };
 
     fetchSubmission();
-  }, [lessonId, baseURL]);
+  }, [lessonsId, baseURL]);
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -50,7 +52,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
     const token = sessionStorage.getItem("Token"); // Example
 
     const submissionData = {
-      lesson_id: lessonId.lessonsId,
+      lesson_id: parseInt(lessonsId),
       submission_text: submissionText,
       file_url: fileUrl,
     };
@@ -70,14 +72,15 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to submit assignment.");
+        toast.error(`${errorData["Error"]}`)
+        return
       }
   
       const data = await response.json();
       setSubmission(data); // Update the submission state with the response
       setSuccess("Assignment submitted successfully!");
       setTimeout(() => {
-        navigate('/Courses'); // Redirect to the lessons page
+        navigate(`/Lessons/${data.Submission.lesson.course._id}`); // Redirect to the lessons page
       }, 1000);
       setError(""); // Clear any previous errors
     } catch (err) {
@@ -91,7 +94,7 @@ const AssignmentSubmissionPage = ({ baseURL }) => {
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto p-6 m-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">
         {submission ? "Edit Submission" : "Submit Assignment"}
       </h2>
