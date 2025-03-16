@@ -21,7 +21,7 @@ import CreateQuiz from "./pages/CreateQuiz";
 import EditQuiz from "./pages/EditQuiz";
 
 function App() {
-  const baseURL = "https://stemlearn-db.onrender.com";
+  const baseURL = "http://127.0.0.1:5555";
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     if (sessionStorage.getItem("Token")) {
@@ -32,7 +32,7 @@ function App() {
   return (
     <Router>
       <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-      < ToastContainer/>
+      <ToastContainer />
       <Routes>
         <Route
           path="/"
@@ -48,15 +48,21 @@ function App() {
         />
         <Route
           path="/AdminDashboard"
-          element={<AdmDashboard baseURL={baseURL}/>}
+          element={<AdmDashboard baseURL={baseURL} />}
         />
         <Route
           path="/TeacherDashboard"
-          element={<TeacherDashboard baseURL={baseURL}/>}
+          element={<TeacherDashboard baseURL={baseURL} />}
         />
         <Route
           path="/StudentDashboard"
-          element={<StudentDashboard baseURL={baseURL} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}
+          element={
+            <StudentDashboard
+              baseURL={baseURL}
+              loggedIn={loggedIn}
+              setLoggedIn={setLoggedIn}
+            />
+          }
         />
         <Route
           path="/Courses"
@@ -90,7 +96,7 @@ function App() {
           path="/Assignments/:lessonsId"
           element={<AssignmentSubmissionPage baseURL={baseURL} />}
         />
-        <Route path="/EditQuiz/:id" element={<EditQuiz baseURL={baseURL} />} />
+        <Route path="/edit-quiz/:id" element={<EditQuiz baseURL={baseURL} />} />
       </Routes>
     </Router>
   );
